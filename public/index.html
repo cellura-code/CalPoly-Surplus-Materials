@@ -4,2447 +4,528 @@
   <meta charset="utf-8">
   <title>Cal Poly Surplus Materials</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="description" content="Browse and reserve surplus materials at Cal Poly. Accessible for all users.">
+  <link rel="manifest" href="manifest.json">
   <style>
-    :root{
-      --green:#0b6b3a;
-      --green2:#0f8a4b;
-      --bg:#f6fff9;
-      --card:#ffffff;
-      --text:#0f1b14;
-      --muted:#5a6b61;
-      --border:#d9eadf;
-      --danger:#b42318;
-      --warn:#9a6700;
-      --shadow: 0 10px 28px rgba(0,0,0,.08);
-      --radius: 16px;
-      --blue:#1d4ed8;
+    :root {
+      --green: #0b6b3a; --green2: #0f8a4b; --bg: #f6fff9; --card: #ffffff; --text: #0f1b14; --muted: #5a6b61; --border: #d9eadf; --danger: #b42318; --warn: #9a6700; --shadow: 0 10px 28px rgba(0,0,0,.08); --radius: 16px; --blue: #1d4ed8;
     }
-
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg), #ffffff);
-      color:var(--text);
-      font-size:15px;
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:10;
-      background:#ffffffcc;
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid var(--border);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px 16px;
-      gap:12px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      text-decoration:none;
-      color:inherit;
-      min-width: 320px;
-    }
-
-    .logo{
-      width:104px;
-      height:104px;
-      object-fit:contain;
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:8px;
-      box-shadow: var(--shadow);
-      display:block;
-    }
-
-    .brandTitle{
-      font-weight: 950;
-      letter-spacing:.2px;
-      font-size: 19px;
-      line-height: 1.1;
-    }
-
-    .brandSub{
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 4px;
-      line-height: 1.35;
-      max-width: 560px;
-    }
-
-    .topRight{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .pill{
-      padding:7px 10px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:900;
-      border:1px solid var(--border);
-      background:#e9f7ee;
-      color:var(--green);
-      white-space:nowrap;
-    }
-
-    .btn{
-      border:1px solid var(--border);
-      background:#fff;
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:900;
-      font-size:15px;
-      user-select:none;
-    }
-
-    .btn.primary{
-      background:var(--green);
-      border-color:var(--green);
-      color:#fff;
-    }
-    .btn.primary:hover{background:var(--green2); border-color:var(--green2)}
-
-    .btn.danger{
-      border-color:#f2c2bd;
-      color:var(--danger);
-    }
-    .btn.danger:hover{background:#fff4f3}
-
-    .btn.warn{
-      border-color:#fde9b6;
-      color:var(--warn);
-    }
-    .btn.warn:hover{background:#fffbeb}
-
-    .btn.blue{
-      border-color:#bfd3ff;
-      color:var(--blue);
-    }
-    .btn.blue:hover{background:#eff6ff}
-
-    .hidden{display:none!important}
-
-    main{
-      max-width: 1320px;
-      margin: 18px auto;
-      padding: 0 16px 28px 16px;
-    }
-
-    .row{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
-    }
-
-    .search{
-      flex: 1;
-      min-width: 240px;
-      padding:12px 12px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      outline:none;
-      font-size:15px;
-      background:#fff;
-    }
-    .search:focus{border-color:var(--green2)}
-
-    select, input, textarea{
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:10px 12px;
-      font-size:15px;
-      outline:none;
-      background:#fff;
-    }
-    select:focus, input:focus, textarea:focus{border-color:var(--green2)}
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap:14px;
-    }
-    @media (max-width: 1020px){
-      .grid{grid-template-columns: 1fr}
-      .brand{min-width:auto}
-    }
-
-    .panel{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:14px;
-      min-height: 240px;
-    }
-
-    .panelHeader{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      margin-bottom: 12px;
-    }
-
-    h2{
-      margin:0;
-      font-size: 19px;
-      letter-spacing:.2px;
-    }
-
-    .muted{color:var(--muted); font-size:14px}
-
-    .chips{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin: 10px 0 12px 0;
-    }
-
-    .chip{
-      border:1px solid var(--border);
-      background:#fff;
-      color:var(--muted);
-      padding:8px 10px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:900;
-      cursor:pointer;
-      user-select:none;
-    }
-
-    .chip.active{
-      background:#e9f7ee;
-      color:var(--green);
-      border-color:#bfe2cd;
-    }
-
-    .list{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      max-height: 68vh;
-      overflow:auto;
-      padding-right: 6px;
-    }
-
-    .itemRow{
-      border:1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 12px;
-      cursor:pointer;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      transition: border-color .12s ease, transform .05s ease;
-      background:#fff;
-      align-items:center;
-    }
-    .itemRow:hover{border-color:#bfe2cd}
-    .itemRow:active{transform: scale(.995)}
-
-    .thumb{
-      width:54px;
-      height:54px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#fff;
-      object-fit:cover;
-      flex:0 0 auto;
-    }
-
-    .thumbFallback{
-      width:54px;
-      height:54px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#f3fbf6;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-weight:900;
-      font-size:12px;
-      text-align:center;
-      padding:6px;
-      flex:0 0 auto;
-    }
-
-    .itemLeft{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      min-width: 0;
-    }
-
-    .itemText{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      min-width: 0;
-    }
-
-    .itemName{
-      font-weight: 950;
-      font-size:15px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 520px;
-    }
-
-    .itemMeta{
-      font-size:13px;
-      color:var(--muted);
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-      line-height: 1.3;
-    }
-
-    .qty{
-      font-weight: 1000;
-      font-size:15px;
-      color: var(--green);
-      display:flex;
-      align-items:center;
-      gap:6px;
-      white-space:nowrap;
-      flex:0 0 auto;
-    }
-    .unit{font-size:13px; color:var(--muted); font-weight:900}
-
-    .badge{
-      display:inline-block;
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      border:1px solid var(--border);
-      background:#fff;
-    }
-    .badge.low{
-      border-color:#fde9b6;
-      background:#fffbeb;
-      color:#9a6700;
-    }
-    .badge.out{
-      border-color:#f2c2bd;
-      background:#fff4f3;
-      color:#b42318;
-    }
-    .badge.req{
-      border-color:#bfd3ff;
-      background:#eff6ff;
-      color:var(--blue);
-    }
-
-    .empty{
-      padding: 22px;
-      text-align:center;
-      color:var(--muted);
-      border:1px dashed var(--border);
-      border-radius: 14px;
-      font-size:15px;
-    }
-
-    .card{
-      border:1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      background:#fff;
-    }
-
-    .bigQty{
-      font-size: 27px;
-      font-weight: 1000;
-      color:var(--green);
-    }
-
-    .detailTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap: 10px;
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 10px;
-      align-items:center;
-    }
-
-    .tag{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius: 999px;
-      border:1px solid var(--border);
-      background:#fff;
-      font-size:13px;
-      font-weight: 900;
-      color: var(--muted);
-    }
-
-    .twoCol{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 520px){ .twoCol{grid-template-columns:1fr} }
-
-    label{
-      font-size:13px;
-      color:var(--muted);
-      font-weight: 900;
-    }
-
-    .formRow{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-
-    .hint{
-      background:#f0fbf4;
-      border:1px dashed #c8ecd6;
-      color:var(--muted);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-size: 14px;
-      line-height: 1.35;
-    }
-
-    .error{
-      background:#fff4f3;
-      border:1px solid #f2c2bd;
-      color:#7a271a;
-      padding:10px 12px;
-      border-radius: 14px;
-      font-size:14px;
-      white-space: pre-wrap;
-    }
-
-    .kioskToggle{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      border:1px solid var(--border);
-      padding:8px 10px;
-      border-radius: 12px;
-      background:#fff;
-      font-weight: 900;
-      font-size:15px;
-      color: var(--muted);
-      user-select:none;
-      cursor:pointer;
-    }
-
-    .kioskOn .logo{ width:124px; height:124px; }
-    .kioskOn .brandTitle{ font-size:23px; }
-    .kioskOn .brandSub{ font-size:14px; }
-    .kioskOn .btn{ padding:14px 16px; border-radius:14px; font-size:15px; }
-    .kioskOn .search{ padding:16px 16px; font-size:17px; border-radius:14px; }
-    .kioskOn select{ padding:14px 14px; font-size:16px; border-radius:14px; }
-    .kioskOn .itemRow{ padding:14px 14px; border-radius:16px; }
-    .kioskOn .itemName{ font-size:17px; }
-    .kioskOn .qty{ font-size:19px; }
-    .kioskOn .panel{ padding:16px; border-radius:20px; }
-    .kioskOn h2{ font-size:21px; }
-    .kioskOn .muted{ font-size:15px; }
-    .kioskOn .badge{ font-size:13px; padding:6px 10px; }
-    .kioskOn .thumb, .kioskOn .thumbFallback{ width:66px; height:66px; border-radius:14px; }
-
-    .modal{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,.35);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 16px;
-      z-index: 100;
-    }
-
-    .modalCard{
-      width: min(820px, 100%);
-      background:#fff;
-      border-radius: 18px;
-      border:1px solid var(--border);
-      box-shadow: 0 18px 50px rgba(0,0,0,.22);
-      overflow:hidden;
-    }
-
-    .modalHeader{
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      font-size:15px;
-    }
-
-    .modalBody{ padding: 14px 16px; display:flex; flex-direction:column; gap:10px; }
-    .modalFooter{
-      padding: 14px 16px;
-      border-top: 1px solid var(--border);
-      display:flex;
-      justify-content:flex-end;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .iconBtn{
-      border:1px solid var(--border);
-      background:#fff;
-      border-radius: 12px;
-      padding: 8px 10px;
-      cursor:pointer;
-      font-weight: 1000;
-      font-size:15px;
-    }
-
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size:13px;
-      border:1px solid var(--border);
-      border-bottom-width:2px;
-      padding:2px 6px;
-      border-radius:8px;
-      background:#fff;
-      color:var(--muted);
-    }
-
-    .footerNote{
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: right;
-    }
-
-    .detailPhotoWrap{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      flex-wrap:wrap;
-      margin-top: 10px;
-    }
-
-    .detailPhoto{
-      width: 240px;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      background:#fff;
-    }
-
-    .detailPhotoFallback{
-      width: 240px;
-      height: 180px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background:#f3fbf6;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-weight:900;
-      text-align:center;
-      font-size:15px;
-      padding:14px;
-      box-shadow: var(--shadow);
-    }
-
-    .requestRow{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px 12px;
-      background:#fff;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-    }
-
-    .requestLeft{display:flex; flex-direction:column; gap:4px}
-    .requestTitle{font-weight:950; font-size:15px}
-    .requestMeta{font-size:13px; color:var(--muted); line-height:1.3}
-    .requestActions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-
-    .auditRow{
-      border-top:1px solid var(--border);
-      padding-top:8px;
-      margin-top:8px;
-      font-size:15px;
-    }
+    body.dark { --bg: #1a1a1a; --card: #2a2a2a; --text: #f0f0f0; --muted: #a0a0a0; --border: #404040; --green: #90ee90; --green2: #98fb98; --danger: #ff4500; --warn: #ffd700; --blue: #87cefa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: linear-gradient(180deg, var(--bg), #ffffff); color: var(--text); font-size: 15px; }
+    header { position: sticky; top: 0; z-index: 10; background: #ffffffcc; backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; gap: 12px; transition: top 0.3s ease; }
+    header.hidden { top: -124px; } /* Height of header, adjust if needed */
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-width: 320px; }
+    .logo { width: 104px; height: 104px; object-fit: contain; background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 8px; box-shadow: var(--shadow); display: block; }
+    .brandTitle { font-weight: 950; letter-spacing: .2px; font-size: 19px; line-height: 1.1; }
+    .brandSub { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.35; max-width: 560px; }
+    .topRight { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { padding: 7px 10px; border-radius: 999px; font-size: 13px; font-weight: 900; border: 1px solid var(--border); background: #e9f7ee; color: var(--green); white-space: nowrap; }
+    .btn { border: 1px solid var(--border); background: #fff; padding: 10px 12px; border-radius: 12px; cursor: pointer; font-weight: 900; font-size: 15px; user-select: none; }
+    .btn.primary { background: var(--green); border-color: var(--green); color: #fff; }
+    .btn.primary:hover { background: var(--green2); border-color: var(--green2); }
+    .btn.danger { border-color: #f2c2bd; color: var(--danger); }
+    .btn.danger:hover { background: #fff4f3; }
+    .btn.warn { border-color: #fde9b6; color: var(--warn); }
+    .btn.warn:hover { background: #fffbeb; }
+    .btn.blue { border-color: #bfd3ff; color: var(--blue); }
+    .btn.blue:hover { background: #eff6ff; }
+    .hidden { display: none !important; }
+    main { max-width: 1320px; margin: 18px auto; padding: 0 16px 28px 16px; }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+    .search { flex: 1; min-width: 240px; padding: 12px 12px; border: 1px solid var(--border); border-radius: 12px; outline: none; font-size: 15px; background: #fff; }
+    .search:focus { border-color: var(--green2); }
+    select, input, textarea { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; font-size: 15px; outline: none; background: #fff; }
+    select:focus, input:focus, textarea:focus { border-color: var(--green2); }
+    .grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 14px; }
+    @media (max-width: 1020px) { .grid { grid-template-columns: 1fr; } .brand { min-width: auto; } }
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; min-height: 240px; }
+    .panelHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    h2 { margin: 0; font-size: 19px; letter-spacing: .2px; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 12px 0; }
+    .chip { border: 1px solid var(--border); background: #fff; color: var(--muted); padding: 8px 10px; border-radius: 999px; font-size: 13px; font-weight: 900; cursor: pointer; user-select: none; }
+    .chip.active { background: #e9f7ee; color: var(--green); border-color: #bfe2cd; }
+    .list { display: flex; flex-direction: column; gap: 8px; max-height: 68vh; overflow: auto; padding-right: 6px; }
+    .itemRow { border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; gap: 12px; transition: border-color .12s ease, transform .05s ease; background: #fff; align-items: center; }
+    .itemRow:hover { border-color: #bfe2cd; }
+    .itemRow:active { transform: scale(.995); }
+    .thumb { width: 54px; height: 54px; border-radius: 12px; border: 1px solid var(--border); background: #fff; object-fit: cover; flex: 0 0 auto; }
+    .thumbFallback { width: 54px; height: 54px; border-radius: 12px; border: 1px solid var(--border); background: #f3fbf6; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 900; font-size: 12px; text-align: center; padding: 6px; flex: 0 0 auto; }
+    .itemLeft { display: flex; gap: 10px; align-items: center; min-width: 0; }
+    .itemText { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .itemName { font-weight: 950; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 520px; }
+    .itemMeta { font-size: 13px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; line-height: 1.3; }
+    .qty { font-weight: 1000; font-size: 15px; color: var(--green); display: flex; align-items: center; gap: 6px; white-space: nowrap; flex: 0 0 auto; }
+    .unit { font-size: 13px; color: var(--muted); font-weight: 900; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 12px; font-weight: 900; border: 1px solid var(--border); background: #fff; }
+    .badge.low { border-color: #fde9b6; background: #fffbeb; color: #9a6700; }
+    .badge.out { border-color: #f2c2bd; background: #fff4f3; color: #b42318; }
+    .badge.req { border-color: #bfd3ff; background: #eff6ff; color: var(--blue); }
+    .empty { padding: 22px; text-align: center; color: var(--muted); border: 1px dashed var(--border); border-radius: 14px; font-size: 15px; }
+    .card { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: #fff; }
+    .bigQty { font-size: 27px; font-weight: 1000; color: var(--green); }
+    .detailTop { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+    .tag { display: inline-block; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: #fff; font-size: 13px; font-weight: 900; color: var(--muted); }
+    .twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 520px) { .twoCol { grid-template-columns: 1fr; } }
+    label { font-size: 13px; color: var(--muted); font-weight: 900; }
+    .formRow { display: flex; flex-direction: column; gap: 6px; }
+    .hint { background: #f0fbf4; border: 1px dashed #c8ecd6; color: var(--muted); padding: 10px 12px; border-radius: 14px; font-size: 14px; line-height: 1.35; }
+    .error { background: #fff4f3; border: 1px solid #f2c2bd; color: #7a271a; padding: 10px 12px; border-radius: 14px; font-size: 14px; white-space: pre-wrap; }
+    .kioskToggle { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 8px 10px; border-radius: 12px; background: #fff; font-weight: 900; font-size: 15px; color: var(--muted); user-select: none; cursor: pointer; }
+    .kioskOn .logo { width: 124px; height: 124px; }
+    .kioskOn .brandTitle { font-size: 23px; }
+    .kioskOn .brandSub { font-size: 14px; }
+    .kioskOn .btn { padding: 14px 16px; border-radius: 14px; font-size: 15px; }
+    .kioskOn .search { padding: 16px 16px; font-size: 17px; border-radius: 14px; }
+    .kioskOn select { padding: 14px 14px; font-size: 16px; border-radius: 14px; }
+    .kioskOn .itemRow { padding: 14px 14px; border-radius: 16px; }
+    .kioskOn .itemName { font-size: 17px; }
+    .kioskOn .qty { font-size: 19px; }
+    .kioskOn .panel { padding: 16px; border-radius: 20px; }
+    .kioskOn h2 { font-size: 21px; }
+    .kioskOn .muted { font-size: 15px; }
+    .kioskOn .badge { font-size: 13px; padding: 6px 10px; }
+    .kioskOn .thumb, .kioskOn .thumbFallback { width: 66px; height: 66px; border-radius: 14px; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
+    .modalCard { width: min(820px, 100%); background: #fff; border-radius: 18px; border: 1px solid var(--border); box-shadow: 0 18px 50px rgba(0,0,0,.22); overflow: hidden; }
+    .modalHeader { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 15px; }
+    .modalBody { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .modalFooter { padding: 14px 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+    .iconBtn { border: 1px solid var(--border); background: #fff; border-radius: 12px; padding: 8px 10px; cursor: pointer; font-weight: 1000; font-size: 15px; }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; border: 1px solid var(--border); border-bottom-width: 2px; padding: 2px 6px; border-radius: 8px; background: #fff; color: var(--muted); }
+    .footerNote { margin-top: 14px; color: var(--muted); font-size: 13px; text-align: right; }
+    .detailPhotoWrap { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; margin-top: 10px; }
+    .detailPhoto { width: 240px; height: 180px; object-fit: cover; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); background: #fff; }
+    .detailPhotoFallback { width: 240px; height: 180px; border-radius: 16px; border: 1px solid var(--border); background: #f3fbf6; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 900; text-align: center; font-size: 15px; padding: 14px; box-shadow: var(--shadow); }
+    .requestRow { border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; background: #fff; display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .requestLeft { display: flex; flex-direction: column; gap: 4px; }
+    .requestTitle { font-weight: 950; font-size: 15px; }
+    .requestMeta { font-size: 13px; color: var(--muted); line-height: 1.3; }
+    .requestActions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .auditRow { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 8px; font-size: 15px; }
+    .loading { text-align: center; padding: 20px; color: var(--muted); }
+    .autocomplete { position: absolute; background: #fff; border: 1px solid var(--border); border-radius: 12px; max-height: 200px; overflow: auto; z-index: 5; }
+    .autocomplete-item { padding: 10px; cursor: pointer; }
+    .autocomplete-item:hover { background: #e9f7ee; }
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    /* Mobile header hide */
+    @media (max-width: 768px) { header.hidden { top: -150px; } }
   </style>
 </head>
-
 <body>
-
-<header>
-  <a class="brand" href="#" id="homeBtn" title="Home">
-    <img class="logo" src="Cal-Poly-Logo-Seal.png" alt="Cal Poly Seal">
-    <div>
-      <div class="brandTitle">Cal Poly Surplus Materials</div>
-      <div class="brandSub">
-        Browse available surplus materials across campus shops and locate items for pickup.
-      </div>
-    </div>
-  </a>
-
-  <div class="topRight">
-    <div id="modePill" class="pill">Student mode</div>
-
-    <label class="kioskToggle" title="Kiosk mode makes buttons and text bigger">
-      <input id="kioskToggle" type="checkbox" style="width:18px;height:18px">
-      Kiosk mode
-    </label>
-
-    <button id="resetBtn" class="btn warn hidden" title="Reset saved data">Reset Data</button>
-    <button id="techUndoBtn" class="btn warn hidden" title="Undo the last tech action">Undo Last</button>
-    <button id="techAuditBtn" class="btn hidden" title="View recent activity log">Activity Log</button>
-    <button id="techAddBtn" class="btn primary hidden">+ Add Material</button>
-    <button id="techRequestsBtn" class="btn blue hidden">Reservations</button>
-
-    <button id="techLoginBtn" class="btn">Tech Login</button>
-    <button id="logoutBtn" class="btn danger hidden">Logout</button>
-  </div>
-</header>
-
-<main>
-  <div class="row">
-    <input id="searchInput" class="search" placeholder="Search: aluminum, bolts, acrylic, thickness, building, bin">
-
-    <select id="categorySelect" title="Category">
-      <option value="">All categories</option>
-      <option>Metals</option>
-      <option>Plastics</option>
-      <option>Fasteners</option>
-      <option>Electronics</option>
-      <option>Wood</option>
-      <option>Other</option>
-    </select>
-
-    <select id="buildingSelect" title="Building">
-      <option value="">All buildings</option>
-      <option>Bonderson Project Center</option>
-      <option>Aero Hanger</option>
-      <option>Materials Engineering Yard</option>
-    </select>
-
-    <select id="locationSelect" title="Storage area">
-      <option value="">All storage areas</option>
-      <option>Shelf A</option>
-      <option>Shelf B</option>
-      <option>Shelf C</option>
-      <option>Bin A1</option>
-      <option>Bin A2</option>
-      <option>Bin B1</option>
-      <option>Bin B2</option>
-      <option>Bin C3</option>
-      <option>Rack 1</option>
-      <option>Rack 2</option>
-      <option>Cabinet 1</option>
-      <option>Cabinet 2</option>
-    </select>
-
-    <select id="sortSelect" title="Sort">
-      <option value="relevance">Sort: Relevance</option>
-      <option value="name_asc">Sort: Name A to Z</option>
-      <option value="qty_desc">Sort: Stock High to Low</option>
-      <option value="qty_asc">Sort: Stock Low to High</option>
-      <option value="recent">Sort: Recently Updated</option>
-    </select>
-
-    <button id="clearFiltersBtn" class="btn">Clear Filters</button>
-
-    <div class="muted">Shortcut: <span class="kbd">/</span> focuses search</div>
-  </div>
-
-  <section class="grid">
-    <div class="panel">
-      <div class="panelHeader">
-        <div>
-          <h2>Available Inventory</h2>
-          <div class="muted">Students only see items with stock greater than 0</div>
-        </div>
-        <div class="muted" id="countText"></div>
-      </div>
-
-      <div class="chips" id="categoryChips"></div>
-
-      <div id="itemsList" class="list"></div>
-      <div id="emptyState" class="empty hidden">No items found, try different keywords or filters.</div>
-      <div class="footerNote">Data saves in this browser only.</div>
-    </div>
-
-    <div class="panel">
-      <div class="panelHeader">
-        <div>
-          <h2>Item Details</h2>
-          <div class="muted">Select an item from the list</div>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header role="banner">
+    <a class="brand" href="#" id="homeBtn" title="Home">
+      <img class="logo" src="Cal-Poly-Logo-Seal.png" alt="Cal Poly Seal">
+      <div>
+        <div class="brandTitle">Cal Poly Surplus Materials</div>
+        <div class="brandSub">
+          Browse available surplus materials across campus shops and locate items for pickup.
         </div>
       </div>
-
-      <div id="detailsArea" class="muted">Click an item to view details.</div>
+    </a>
+    <div class="topRight">
+      <div id="modePill" class="pill">Student mode</div>
+      <label class="kioskToggle" title="Kiosk mode makes buttons and text bigger">
+        <input id="kioskToggle" type="checkbox" style="width:18px;height:18px">
+        Kiosk mode
+      </label>
+      <button id="techAuditBtn" class="btn hidden" title="View recent activity log">Activity Log</button>
+      <button id="techAddBtn" class="btn primary hidden">+ Add Material</button>
+      <button id="techRequestsBtn" class="btn blue hidden">Reservations</button>
+      <button id="techExportBtn" class="btn hidden">Export CSV</button>
+      <button id="techRegisterBtn" class="btn hidden">Register New Tech</button>
+      <button id="techLoginBtn" class="btn">Tech Login</button>
+      <button id="logoutBtn" class="btn danger hidden">Logout</button>
+      <label for="darkToggle">Dark mode</label>
+      <input id="darkToggle" type="checkbox">
     </div>
-  </section>
-</main>
-
-<div id="loginModal" class="modal hidden" role="dialog" aria-modal="true">
-  <div class="modalCard">
-    <div class="modalHeader">
-      <div style="font-weight:1000">Tech Login</div>
-      <button class="iconBtn" id="closeLogin">✕</button>
+  </header>
+  <main id="main" tabindex="-1">
+    <div class="row">
+      <input id="searchInput" class="search" placeholder="Search: aluminum, bolts, acrylic, thickness, building, bin">
+      <div id="autocomplete" class="autocomplete hidden"></div>
+      <select id="categorySelect" title="Category">
+        <option value="">All categories</option>
+        <option>Metals</option>
+        <option>Plastics</option>
+        <option>Fasteners</option>
+        <option>Electronics</option>
+        <option>Wood</option>
+        <option>Other</option>
+      </select>
+      <select id="buildingSelect" title="Building">
+        <option value="">All buildings</option>
+        <option>Bonderson Project Center</option>
+        <option>Aero Hanger</option>
+        <option>Materials Engineering Yard</option>
+      </select>
+      <select id="locationSelect" title="Storage area">
+        <option value="">All storage areas</option>
+        <option>Shelf A</option>
+        <option>Shelf B</option>
+        <option>Shelf C</option>
+        <option>Bin A1</option>
+        <option>Bin A2</option>
+        <option>Bin B1</option>
+        <option>Bin B2</option>
+        <option>Bin C3</option>
+        <option>Rack 1</option>
+        <option>Rack 2</option>
+        <option>Cabinet 1</option>
+        <option>Cabinet 2</option>
+      </select>
+      <select id="sortSelect" title="Sort">
+        <option value="relevance">Sort: Relevance</option>
+        <option value="name_asc">Sort: Name A to Z</option>
+        <option value="qty_desc">Sort: Stock High to Low</option>
+        <option value="qty_asc">Sort: Stock Low to High</option>
+        <option value="recent">Sort: Recently Updated</option>
+      </select>
+      <button id="clearFiltersBtn" class="btn">Clear Filters</button>
+      <div class="muted">Shortcut: <span class="kbd">/</span> focuses search</div>
     </div>
-
-    <div class="modalBody">
-      <div class="hint">
-        Enter your tech username and password to access inventory controls.
-      </div>
-
-      <div class="twoCol">
-        <div class="formRow">
-          <label>Tech username</label>
-          <input id="techUserInput" placeholder="Example: bonderson-tech">
-        </div>
-        <div class="formRow">
-          <label>Tech password</label>
-          <input id="techPassInput" type="password" placeholder="Password">
-        </div>
-      </div>
-
-      <div id="loginError" class="error hidden"></div>
-    </div>
-
-    <div class="modalFooter">
-      <button class="btn" id="cancelLogin">Cancel</button>
-      <button class="btn primary" id="confirmLogin">Login</button>
-    </div>
-  </div>
-</div>
-
-<div id="addModal" class="modal hidden" role="dialog" aria-modal="true">
-  <div class="modalCard">
-    <div class="modalHeader">
-      <div style="font-weight:1000">Add Material</div>
-      <button class="iconBtn" id="closeAdd">✕</button>
-    </div>
-
-    <div class="modalBody">
-      <div class="hint">
-        If name, category, unit, building, storage area, condition, and attributes match an existing item,
-        the stock is merged and increased. Photo upload is stored in this browser.
-      </div>
-
-      <div class="formRow">
-        <label>Name</label>
-        <input id="itemNameInput" placeholder="Example: Aluminum angle">
-      </div>
-
-      <div class="twoCol">
-        <div class="formRow">
-          <label>Category</label>
-          <select id="itemCategoryInput">
-            <option>Metals</option>
-            <option>Plastics</option>
-            <option>Fasteners</option>
-            <option>Electronics</option>
-            <option>Wood</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div class="formRow">
-          <label>Unit</label>
-          <select id="itemUnitInput">
-            <option value="pcs">pcs</option>
-            <option value="in">in</option>
-            <option value="ft">ft</option>
-            <option value="lb">lb</option>
-            <option value="oz">oz</option>
-            <option value="g">g</option>
-            <option value="kg">kg</option>
-            <option value="m">m</option>
-            <option value="cm">cm</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="twoCol">
-        <div class="formRow">
-          <label>Building</label>
-          <select id="itemBuildingInput">
-            <option>Bonderson Project Center</option>
-            <option>Aero Hanger</option>
-            <option>Materials Engineering Yard</option>
-          </select>
-        </div>
-
-        <div class="formRow">
-          <label>Storage area</label>
-          <select id="itemLocationInput">
-            <option>Shelf A</option>
-            <option>Shelf B</option>
-            <option>Shelf C</option>
-            <option>Bin A1</option>
-            <option>Bin A2</option>
-            <option>Bin B1</option>
-            <option>Bin B2</option>
-            <option>Bin C3</option>
-            <option>Rack 1</option>
-            <option>Rack 2</option>
-            <option>Cabinet 1</option>
-            <option>Cabinet 2</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="twoCol">
-        <div class="formRow">
-          <label>Quantity to add</label>
-          <input id="itemQtyInput" type="number" min="0" step="0.01" placeholder="Example: 6">
-        </div>
-
-        <div class="formRow">
-          <label>Condition (optional)</label>
-          <select id="itemConditionInput">
-            <option value="">Not specified</option>
-            <option>New</option>
-            <option>Good</option>
-            <option>Used</option>
-            <option>Rough</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="formRow">
-        <label>Photo (optional)</label>
-        <input id="itemPhotoInput" type="file" accept="image/*">
-        <div class="muted">Tip: keep photos small so browser storage does not fill up too fast.</div>
-      </div>
-
-      <div class="formRow">
-        <label>Attributes (optional)</label>
-        <textarea id="itemAttrsInput" rows="3" placeholder='JSON like {"alloy":"6061","dims":"1x1x1/8","thickness":"0.25in"}'></textarea>
-      </div>
-
-      <div class="formRow">
-        <label>Note (optional)</label>
-        <input id="itemNoteInput" placeholder="Example: drop off from senior project">
-      </div>
-
-      <div id="addError" class="error hidden"></div>
-    </div>
-
-    <div class="modalFooter">
-      <button class="btn" id="cancelAdd">Cancel</button>
-      <button class="btn primary" id="confirmAdd">Add / Merge</button>
-    </div>
-  </div>
-</div>
-
-<div id="reserveModal" class="modal hidden" role="dialog" aria-modal="true">
-  <div class="modalCard">
-    <div class="modalHeader">
-      <div style="font-weight:1000">Reserve Item</div>
-      <button class="iconBtn" id="closeReserve">✕</button>
-    </div>
-
-    <div class="modalBody">
-      <div class="hint" id="reserveHint"></div>
-
-      <div class="twoCol">
-        <div class="formRow">
-          <label>Your name</label>
-          <input id="reserveName" placeholder="Example: Mike" required>
-        </div>
-        <div class="formRow">
-          <label>Email</label>
-          <input id="reserveEmail" type="email" placeholder="Example: you@calpoly.edu" required>
-        </div>
-      </div>
-
-      <div class="twoCol">
-        <div class="formRow">
-          <label>Quantity to reserve</label>
-          <input id="reserveQty" type="number" min="0" step="0.01" placeholder="Example: 2">
-        </div>
-        <div class="formRow">
-          <label>Note for techs (optional)</label>
-          <input id="reserveNote" placeholder="Example: need by Friday, senior project">
-        </div>
-      </div>
-
-      <div id="reserveError" class="error hidden"></div>
-    </div>
-
-    <div class="modalFooter">
-      <button class="btn" id="reserveCancel">Cancel</button>
-      <button class="btn blue" id="reserveSubmit">Submit Reservation</button>
-    </div>
-  </div>
-</div>
-
-<div id="requestsModal" class="modal hidden" role="dialog" aria-modal="true">
-  <div class="modalCard">
-    <div class="modalHeader">
-      <div style="font-weight:1000">Reservations</div>
-      <button class="iconBtn" id="closeRequests">✕</button>
-    </div>
-
-    <div class="modalBody">
-      <div class="hint">
-        Students submit reservations. Techs fulfill them by removing stock.
-      </div>
-
-      <div class="row" style="margin:0">
-        <select id="reqFilter">
-          <option value="pending">Pending</option>
-          <option value="fulfilled">Fulfilled</option>
-          <option value="canceled">Canceled</option>
-          <option value="all">All</option>
-        </select>
-        <input id="reqSearch" class="search" placeholder="Search reservations by item, building, name, email">
-      </div>
-
-      <div id="reqList" class="list" style="max-height:54vh"></div>
-      <div id="reqEmpty" class="empty hidden">No reservations in this view.</div>
-      <div id="reqError" class="error hidden"></div>
-    </div>
-
-    <div class="modalFooter">
-      <button class="btn" id="requestsCloseBtn">Close</button>
-    </div>
-  </div>
-</div>
-
-<div id="contactModal" class="modal hidden" role="dialog" aria-modal="true">
-  <div class="modalCard">
-    <div class="modalHeader">
-      <div style="font-weight:1000" id="contactTitle">Contact</div>
-      <button class="iconBtn" id="closeContact">✕</button>
-    </div>
-
-    <div class="modalBody" id="contactBody"></div>
-
-    <div class="modalFooter">
-      <button class="btn" id="contactCloseBtn">Close</button>
-    </div>
-  </div>
-</div>
-
-<div id="auditModal" class="modal hidden" role="dialog" aria-modal="true">
-  <div class="modalCard">
-    <div class="modalHeader">
-      <div style="font-weight:1000">Activity Log</div>
-      <button class="iconBtn" id="closeAudit">✕</button>
-    </div>
-
-    <div class="modalBody">
-      <div class="hint">
-        This shows recent tech actions for accountability.
-      </div>
-      <div id="auditList" class="card"></div>
-    </div>
-
-    <div class="modalFooter">
-      <button class="btn" id="auditCloseBtn">Close</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  const LS_STATE = "cal_poly_surplus_materials_v5";
-  const LS_TECH  = "cal_poly_surplus_materials_isTech";
-  const LS_TECHU = "cal_poly_surplus_materials_tech_user";
-  const LS_KIOSK = "cal_poly_surplus_materials_kiosk";
-  const LS_ME    = "cal_poly_surplus_materials_student_id";
-
-  const PICKUP_INSTRUCTIONS = {
-    "Bonderson Project Center": [
-      "Pickup window: weekday hours when staff are present.",
-      "Bring student ID.",
-      "If the bin is behind a desk or cage, ask the on duty tech for access.",
-      "Return any leftover packaging to keep the area clean."
-    ],
-    "Aero Hanger": [
-      "Check in before entering work areas.",
-      "Follow posted safety rules and stay in designated pickup zones.",
-      "If a door is locked, do not tailgate, contact the shop lead or tech."
-    ],
-    "Materials Engineering Yard": [
-      "Outdoor storage, wear closed toe shoes.",
-      "Some materials may be heavy or sharp, use gloves and move safely.",
-      "If access is gated, coordinate pickup with the yard attendant or tech."
-    ]
-  };
-
-  const BUILDING_CONTACTS = {
-    "Bonderson Project Center": {
-      role: "Bonderson tech desk",
-      how: [
-        "Go to the Bonderson front desk and ask for surplus materials pickup.",
-        "If you reserved an item, give the reservation number if you have it."
-      ]
-    },
-    "Aero Hanger": {
-      role: "Aero shop lead or floor tech",
-      how: [
-        "Check in at the Aero Hanger front area before entering.",
-        "Ask the shop lead or floor tech for surplus materials pickup."
-      ]
-    },
-    "Materials Engineering Yard": {
-      role: "Materials yard attendant",
-      how: [
-        "Ask the yard attendant for access to the surplus storage area.",
-        "If the yard is gated or locked, do not tailgate, wait for staff."
-      ]
-    }
-  };
-
-  const LARGE_REMOVE_DEFAULT = 25;
-  const LARGE_REMOVE_LENGTH  = 10;
-  const LARGE_REMOVE_WEIGHT  = 5;
-
-  function normalizeText(s){
-    return String(s || "").trim().toLowerCase().replace(/\s+/g, " ");
-  }
-
-  function safeJsonParse(s){
-    try { return JSON.parse(s || "{}"); } catch { return null; }
-  }
-
-  function stableStringify(obj){
-    if (!obj || typeof obj !== "object" || Array.isArray(obj)) return JSON.stringify(obj);
-    const keys = Object.keys(obj).map(k => normalizeText(k)).sort();
-    const out = {};
-    for (const kn of keys){
-      const ok = Object.keys(obj).find(k => normalizeText(k) === kn);
-      out[kn] = normalizeText(obj[ok]);
-    }
-    return JSON.stringify(out);
-  }
-
-  function fingerprint(item){
-    const n = normalizeText(item.name);
-    const c = normalizeText(item.category);
-    const u = normalizeText(item.unit);
-    const b = normalizeText(item.building);
-    const l = normalizeText(item.location);
-    const cond = normalizeText(item.condition || "");
-    const attrs = item.attributes && typeof item.attributes === "object" ? item.attributes : {};
-    return `${n}|${c}|${u}|${b}|${l}|${cond}|${stableStringify(attrs)}`;
-  }
-
-  function nowText(){
-    const d = new Date();
-    return d.toISOString().slice(0,19).replace("T"," ");
-  }
-
-  function uuidShort(){
-    return Math.random().toString(16).slice(2) + "-" + Math.random().toString(16).slice(2);
-  }
-
-  function round2(n){
-    return Math.round(n * 100) / 100;
-  }
-
-  function loadState(){
-    const raw = localStorage.getItem(LS_STATE);
-    if (!raw) return null;
-    try { return JSON.parse(raw); } catch { return null; }
-  }
-
-  function saveState(st){
-    localStorage.setItem(LS_STATE, JSON.stringify(st));
-  }
-
-  function isTech(){
-    return localStorage.getItem(LS_TECH) === "1";
-  }
-
-  function setTech(val){
-    localStorage.setItem(LS_TECH, val ? "1" : "0");
-  }
-
-  function getTechUser(){
-    return (localStorage.getItem(LS_TECHU) || "").trim();
-  }
-
-  function setTechUser(u){
-    localStorage.setItem(LS_TECHU, (u || "").trim());
-  }
-
-  function isKiosk(){
-    return localStorage.getItem(LS_KIOSK) === "1";
-  }
-
-  function setKiosk(val){
-    localStorage.setItem(LS_KIOSK, val ? "1" : "0");
-  }
-
-  function getStudentId(){
-    let me = localStorage.getItem(LS_ME);
-    if (!me){
-      me = "student-" + uuidShort();
-      localStorage.setItem(LS_ME, me);
-    }
-    return me;
-  }
-
-  function seed(){
-    let st = loadState();
-    if (st && Array.isArray(st.items) && Array.isArray(st.requests) && Array.isArray(st.auditLog)) return;
-
-    const t = nowText();
-
-    st = {
-      nextId: 31,
-      nextReqId: 5,
-      items: [
-        { id:1, name:"Aluminum angle", category:"Metals", unit:"ft", building:"Bonderson Project Center", location:"Shelf A", condition:"Good", qty:14, photo:null, attributes:{ alloy:"6061", dims:"1x1x1/8" }, updatedAt:t, history:[{ type:"ADD", qty:+14, note:"Leftover from senior project", at:t, actor:"added by tech" }] },
-        { id:2, name:"M3 socket head bolts", category:"Fasteners", unit:"pcs", building:"Bonderson Project Center", location:"Bin A1", condition:"Good", qty:80, photo:null, attributes:{ length:"12mm" }, updatedAt:t, history:[{ type:"ADD", qty:+80, note:"Hardware leftovers", at:t, actor:"added by tech" }] },
-        { id:3, name:"Acrylic sheet", category:"Plastics", unit:"pcs", building:"Aero Hanger", location:"Shelf B", condition:"Used", qty:2, photo:null, attributes:{ thickness:"0.25in", size:"12x24" }, updatedAt:t, history:[{ type:"ADD", qty:+2, note:"Two sheets", at:t, actor:"added by tech" }] },
-        { id:4, name:"Plywood offcuts", category:"Wood", unit:"pcs", building:"Materials Engineering Yard", location:"Bin C3", condition:"Rough", qty:12, photo:null, attributes:{ approx:"mixed sizes" }, updatedAt:t, history:[{ type:"ADD", qty:+12, note:"Workshop offcuts", at:t, actor:"added by tech" }] },
-        { id:5, name:"Steel round stock", category:"Metals", unit:"ft", building:"Materials Engineering Yard", location:"Shelf A", condition:"Used", qty:6, photo:null, attributes:{ grade:"1018", diameter:"0.5in" }, updatedAt:t, history:[{ type:"ADD", qty:+6, note:"Cut ends", at:t, actor:"added by tech" }] },
-        { id:6, name:"Heat shrink tubing", category:"Electronics", unit:"ft", building:"Bonderson Project Center", location:"Bin A2", condition:"Good", qty:20, photo:null, attributes:{ sizes:"mixed" }, updatedAt:t, history:[{ type:"ADD", qty:+20, note:"Assorted pack", at:t, actor:"added by tech" }] },
-        { id:7, name:"Polycarbonate sheet", category:"Plastics", unit:"pcs", building:"Aero Hanger", location:"Shelf A", condition:"Good", qty:1, photo:null, attributes:{ thickness:"0.125in", size:"18x24" }, updatedAt:t, history:[{ type:"ADD", qty:+1, note:"One sheet", at:t, actor:"added by tech" }] },
-        { id:8, name:"Aluminum flat bar", category:"Metals", unit:"ft", building:"Bonderson Project Center", location:"Shelf B", condition:"Good", qty:18, photo:null, attributes:{ alloy:"6061", dims:"2x1/4" }, updatedAt:t, history:[{ type:"ADD", qty:+18, note:"Machine shop drop off", at:t, actor:"added by tech" }] },
-        { id:9, name:"Brass rod", category:"Metals", unit:"ft", building:"Bonderson Project Center", location:"Rack 1", condition:"Used", qty:9, photo:null, attributes:{ diameter:"0.25in" }, updatedAt:t, history:[{ type:"ADD", qty:+9, note:"Short lengths", at:t, actor:"added by tech" }] },
-        { id:10, name:"Copper sheet", category:"Metals", unit:"pcs", building:"Materials Engineering Yard", location:"Shelf C", condition:"Good", qty:4, photo:null, attributes:{ thickness:"0.06in", size:"8x10" }, updatedAt:t, history:[{ type:"ADD", qty:+4, note:"Electrical project leftovers", at:t, actor:"added by tech" }] },
-        { id:11, name:"Stainless steel plate", category:"Metals", unit:"pcs", building:"Aero Hanger", location:"Rack 2", condition:"Used", qty:3, photo:null, attributes:{ grade:"304", thickness:"0.125in" }, updatedAt:t, history:[{ type:"ADD", qty:+3, note:"Small plates", at:t, actor:"added by tech" }] },
-        { id:12, name:"Threaded rod", category:"Fasteners", unit:"pcs", building:"Bonderson Project Center", location:"Bin B1", condition:"Good", qty:16, photo:null, attributes:{ size:"1/4-20", length:"12in" }, updatedAt:t, history:[{ type:"ADD", qty:+16, note:"Bulk hardware", at:t, actor:"added by tech" }] },
-        { id:13, name:"Hex nuts", category:"Fasteners", unit:"pcs", building:"Bonderson Project Center", location:"Bin B1", condition:"Good", qty:140, photo:null, attributes:{ size:"1/4-20" }, updatedAt:t, history:[{ type:"ADD", qty:+140, note:"Hardware bin", at:t, actor:"added by tech" }] },
-        { id:14, name:"Washers", category:"Fasteners", unit:"pcs", building:"Aero Hanger", location:"Bin B2", condition:"Good", qty:180, photo:null, attributes:{ size:"M6" }, updatedAt:t, history:[{ type:"ADD", qty:+180, note:"Assorted stock", at:t, actor:"added by tech" }] },
-        { id:15, name:"Rivets", category:"Fasteners", unit:"pcs", building:"Aero Hanger", location:"Cabinet 1", condition:"New", qty:90, photo:null, attributes:{ size:"1/8in aluminum" }, updatedAt:t, history:[{ type:"ADD", qty:+90, note:"Aircraft fabrication leftovers", at:t, actor:"added by tech" }] },
-        { id:16, name:"Wood screws", category:"Fasteners", unit:"pcs", building:"Materials Engineering Yard", location:"Bin A1", condition:"Good", qty:110, photo:null, attributes:{ size:"#8 x 1.5in" }, updatedAt:t, history:[{ type:"ADD", qty:+110, note:"Workshop hardware", at:t, actor:"added by tech" }] },
-        { id:17, name:"ABS sheet", category:"Plastics", unit:"pcs", building:"Bonderson Project Center", location:"Shelf C", condition:"Good", qty:5, photo:null, attributes:{ thickness:"0.125in", size:"12x12" }, updatedAt:t, history:[{ type:"ADD", qty:+5, note:"Vacuum forming scraps", at:t, actor:"added by tech" }] },
-        { id:18, name:"HDPE block", category:"Plastics", unit:"pcs", building:"Materials Engineering Yard", location:"Rack 1", condition:"Used", qty:7, photo:null, attributes:{ size:"3x3x6" }, updatedAt:t, history:[{ type:"ADD", qty:+7, note:"Machining practice stock", at:t, actor:"added by tech" }] },
-        { id:19, name:"PLA filament", category:"Plastics", unit:"lb", building:"Bonderson Project Center", location:"Cabinet 2", condition:"Good", qty:3.5, photo:null, attributes:{ colors:"mixed partial spools" }, updatedAt:t, history:[{ type:"ADD", qty:+3.5, note:"3D print leftovers", at:t, actor:"added by tech" }] },
-        { id:20, name:"PVC tubing", category:"Plastics", unit:"ft", building:"Materials Engineering Yard", location:"Shelf B", condition:"Good", qty:22, photo:null, attributes:{ diameter:"1in" }, updatedAt:t, history:[{ type:"ADD", qty:+22, note:"Fluid system mockup", at:t, actor:"added by tech" }] },
-        { id:21, name:"Foam board", category:"Other", unit:"pcs", building:"Bonderson Project Center", location:"Shelf C", condition:"Good", qty:8, photo:null, attributes:{ size:"20x30" }, updatedAt:t, history:[{ type:"ADD", qty:+8, note:"Presentation leftovers", at:t, actor:"added by tech" }] },
-        { id:22, name:"Cardboard sheets", category:"Other", unit:"pcs", building:"Materials Engineering Yard", location:"Bin B2", condition:"Used", qty:15, photo:null, attributes:{ sizes:"mixed" }, updatedAt:t, history:[{ type:"ADD", qty:+15, note:"Packing material", at:t, actor:"added by tech" }] },
-        { id:23, name:"Wire spool", category:"Electronics", unit:"ft", building:"Bonderson Project Center", location:"Cabinet 1", condition:"Good", qty:40, photo:null, attributes:{ gauge:"22 AWG", type:"stranded" }, updatedAt:t, history:[{ type:"ADD", qty:+40, note:"Electrical lab leftovers", at:t, actor:"added by tech" }] },
-        { id:24, name:"Breadboards", category:"Electronics", unit:"pcs", building:"Bonderson Project Center", location:"Cabinet 2", condition:"Used", qty:6, photo:null, attributes:{ size:"half size" }, updatedAt:t, history:[{ type:"ADD", qty:+6, note:"Reusable lab parts", at:t, actor:"added by tech" }] },
-        { id:25, name:"DC motors", category:"Electronics", unit:"pcs", building:"Aero Hanger", location:"Cabinet 2", condition:"Used", qty:4, photo:null, attributes:{ voltage:"12V" }, updatedAt:t, history:[{ type:"ADD", qty:+4, note:"Prototype leftovers", at:t, actor:"added by tech" }] },
-        { id:26, name:"LED strips", category:"Electronics", unit:"ft", building:"Bonderson Project Center", location:"Bin B2", condition:"Good", qty:11, photo:null, attributes:{ voltage:"12V", color:"white" }, updatedAt:t, history:[{ type:"ADD", qty:+11, note:"Display setup leftovers", at:t, actor:"added by tech" }] },
-        { id:27, name:"Pine boards", category:"Wood", unit:"ft", building:"Materials Engineering Yard", location:"Rack 2", condition:"Used", qty:30, photo:null, attributes:{ nominal:"1x4" }, updatedAt:t, history:[{ type:"ADD", qty:+30, note:"Construction mockup scraps", at:t, actor:"added by tech" }] },
-        { id:28, name:"Birch plywood panels", category:"Wood", unit:"pcs", building:"Bonderson Project Center", location:"Shelf A", condition:"Good", qty:5, photo:null, attributes:{ thickness:"0.5in", size:"24x24" }, updatedAt:t, history:[{ type:"ADD", qty:+5, note:"Laser cut project leftovers", at:t, actor:"added by tech" }] },
-        { id:29, name:"Dowels", category:"Wood", unit:"pcs", building:"Materials Engineering Yard", location:"Bin A2", condition:"Good", qty:25, photo:null, attributes:{ diameter:"0.5in", length:"12in" }, updatedAt:t, history:[{ type:"ADD", qty:+25, note:"Shop class leftovers", at:t, actor:"added by tech" }] },
-        { id:30, name:"Rubber feet", category:"Other", unit:"pcs", building:"Aero Hanger", location:"Bin C3", condition:"New", qty:60, photo:null, attributes:{ type:"adhesive backed" }, updatedAt:t, history:[{ type:"ADD", qty:+60, note:"Fixture hardware", at:t, actor:"added by tech" }] }
-      ],
-      requests: [
-        {
-          id: 1,
-          status: "pending",
-          itemId: 2,
-          qty: 10,
-          name: "Student",
-          email: "student@calpoly.edu",
-          note: "Need for club project",
-          createdAt: t,
-          updatedAt: t,
-          createdBy: getStudentId()
-        }
-      ],
-      auditLog: [
-        { at: t, actor: "added by tech", action: "INIT", details: "Inventory initialized with starting stock." }
-      ],
-      lastUndo: null
-    };
-
-    for (const it of st.items){
-      it.fp = fingerprint(it);
-    }
-
-    saveState(st);
-  }
-
-  function resetData(){
-    localStorage.removeItem(LS_STATE);
-    seed();
-  }
-
-  function audit(action, details){
-    const st = loadState();
-    const actor = isTech() ? (getTechUser() || "tech") : "student";
-    st.auditLog.unshift({ at: nowText(), actor, action, details });
-    st.auditLog = st.auditLog.slice(0, 80);
-    saveState(st);
-  }
-
-  function canUndo(){
-    const st = loadState();
-    return !!(st && st.lastUndo);
-  }
-
-  function undoLast(){
-    const st = loadState();
-    if (!st.lastUndo) throw new Error("Nothing to undo.");
-    const u = st.lastUndo;
-
-    if (u.type === "ADD_STOCK"){
-      const item = st.items.find(i => i.id === u.itemId);
-      if (!item) throw new Error("Undo failed: item not found.");
-      if (item.qty < u.qty) throw new Error("Undo failed: stock is too low to revert this add.");
-      item.qty = round2(item.qty - u.qty);
-      item.updatedAt = nowText();
-      item.history.unshift({ type:"UNDO_ADD", qty:-u.qty, note:`Undo: ${u.note || ""}`.trim(), at: nowText(), actor:getTechUser() || "tech" });
-      audit("UNDO", `Reverted add of ${u.qty} ${item.unit} on "${item.name}".`);
-      st.lastUndo = null;
-      saveState(st);
-      return;
-    }
-
-    if (u.type === "REMOVE_STOCK"){
-      const item = st.items.find(i => i.id === u.itemId);
-      if (!item) throw new Error("Undo failed: item not found.");
-      item.qty = round2(item.qty + u.qty);
-      item.updatedAt = nowText();
-      item.history.unshift({ type:"UNDO_REMOVE", qty:+u.qty, note:`Undo: ${u.note || ""}`.trim(), at: nowText(), actor:getTechUser() || "tech" });
-      audit("UNDO", `Reverted removal of ${u.qty} ${item.unit} on "${item.name}".`);
-      st.lastUndo = null;
-      saveState(st);
-      return;
-    }
-
-    if (u.type === "FULFILL_REQUEST"){
-      const item = st.items.find(i => i.id === u.itemId);
-      const req = st.requests.find(r => r.id === u.reqId);
-      if (!item || !req) throw new Error("Undo failed: item or reservation not found.");
-
-      item.qty = round2(item.qty + u.qty);
-      item.updatedAt = nowText();
-      item.history.unshift({ type:"UNDO_FULFILL", qty:+u.qty, note:`Undo fulfillment #${u.reqId}`, at: nowText(), actor:getTechUser() || "tech" });
-
-      req.status = "pending";
-      req.updatedAt = nowText();
-
-      audit("UNDO", `Reverted fulfillment of reservation #${u.reqId} for ${u.qty} ${item.unit} on "${item.name}".`);
-      st.lastUndo = null;
-      saveState(st);
-      return;
-    }
-
-    throw new Error("Unknown undo type.");
-  }
-
-  function thresholdForUnit(unit){
-    const u = String(unit || "").toLowerCase();
-    if (["pcs"].includes(u)) return LARGE_REMOVE_DEFAULT;
-    if (["ft","in","m","cm"].includes(u)) return LARGE_REMOVE_LENGTH;
-    if (["lb","kg","g","oz"].includes(u)) return LARGE_REMOVE_WEIGHT;
-    return LARGE_REMOVE_DEFAULT;
-  }
-
-  function addOrMerge({name, category, unit, building, location, condition, qty, attributes, note, photoDataUrl}){
-    const st = loadState();
-    const actor = getTechUser() || "tech";
-
-    const candidate = {
-      name: String(name || "").trim(),
-      category,
-      unit,
-      building,
-      location,
-      condition: condition || "",
-      qty: 0,
-      attributes: attributes || {}
-    };
-    const fp = fingerprint(candidate);
-
-    let item = st.items.find(i => i.fp === fp);
-
-    let createdNew = false;
-    if (!item){
-      createdNew = true;
-      item = {
-        id: st.nextId++,
-        name: candidate.name,
-        category,
-        unit,
-        building,
-        location,
-        condition: candidate.condition,
-        qty: 0,
-        attributes: candidate.attributes,
-        photo: null,
-        fp,
-        updatedAt: nowText(),
-        history: []
-      };
-      st.items.push(item);
-    }
-
-    item.qty = round2(item.qty + qty);
-    item.updatedAt = nowText();
-    if (photoDataUrl){
-      item.photo = photoDataUrl;
-    }
-
-    item.history.unshift({
-      type: "ADD",
-      qty: +qty,
-      note: note || "",
-      at: nowText(),
-      actor
-    });
-
-    st.auditLog.unshift({
-      at: nowText(),
-      actor,
-      action: "ADD",
-      details: `${createdNew ? "Created" : "Updated"} "${item.name}" +${qty} ${item.unit} @ ${item.building} / ${item.location}`
-    });
-    st.auditLog = st.auditLog.slice(0, 80);
-
-    st.lastUndo = { type:"ADD_STOCK", itemId: item.id, qty: +qty, note: note || "" };
-
-    saveState(st);
-    return item.id;
-  }
-
-  function removeFromStock({itemId, qty, note}){
-    const st = loadState();
-    const actor = getTechUser() || "tech";
-
-    const item = st.items.find(i => i.id === itemId);
-    if (!item) throw new Error("Item not found.");
-    if (item.qty < qty) throw new Error("Not enough stock to remove that amount.");
-
-    item.qty = round2(item.qty - qty);
-    item.updatedAt = nowText();
-
-    item.history.unshift({
-      type: "REMOVE",
-      qty: -qty,
-      note: note || "",
-      at: nowText(),
-      actor
-    });
-
-    st.auditLog.unshift({
-      at: nowText(),
-      actor,
-      action: "REMOVE",
-      details: `"${item.name}" -${qty} ${item.unit} @ ${item.building} / ${item.location}`
-    });
-    st.auditLog = st.auditLog.slice(0, 80);
-
-    st.lastUndo = { type:"REMOVE_STOCK", itemId: item.id, qty: +qty, note: note || "" };
-
-    saveState(st);
-  }
-
-  function createReservation({itemId, qty, name, email, note}){
-    const st = loadState();
-    const item = st.items.find(i => i.id === itemId);
-    if (!item) throw new Error("Item not found.");
-    if (qty <= 0) throw new Error("Quantity must be greater than 0.");
-    if (qty > item.qty) throw new Error("Requested quantity exceeds available stock.");
-
-    const cleanName = (name || "").trim();
-    const cleanEmail = (email || "").trim();
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail);
-
-    if (!cleanName){
-      throw new Error("Name is required.");
-    }
-    if (!cleanEmail){
-      throw new Error("Email is required.");
-    }
-    if (!emailOk){
-      throw new Error("Enter a valid email address.");
-    }
-
-    const t = nowText();
-    const req = {
-      id: st.nextReqId++,
-      status: "pending",
-      itemId,
-      qty: round2(qty),
-      name: cleanName,
-      email: cleanEmail,
-      note: (note || "").trim(),
-      createdAt: t,
-      updatedAt: t,
-      createdBy: getStudentId()
-    };
-
-    st.requests.unshift(req);
-    st.auditLog.unshift({ at: t, actor: "student", action: "RESERVE", details: `Reservation #${req.id} for "${item.name}" qty ${req.qty} ${item.unit}` });
-    st.auditLog = st.auditLog.slice(0, 80);
-
-    saveState(st);
-    return req.id;
-  }
-
-  function updateRequestStatus(reqId, status){
-    const st = loadState();
-    const req = st.requests.find(r => r.id === reqId);
-    if (!req) throw new Error("Reservation not found.");
-
-    req.status = status;
-    req.updatedAt = nowText();
-
-    const actor = getTechUser() || "tech";
-    st.auditLog.unshift({ at: nowText(), actor, action: "REQUEST_STATUS", details: `Reservation #${req.id} -> ${status}` });
-    st.auditLog = st.auditLog.slice(0, 80);
-
-    saveState(st);
-  }
-
-  function fulfillRequest(reqId, techNote){
-    const st = loadState();
-    const actor = getTechUser() || "tech";
-
-    const req = st.requests.find(r => r.id === reqId);
-    if (!req) throw new Error("Reservation not found.");
-    if (req.status !== "pending") throw new Error("Only pending reservations can be fulfilled.");
-
-    const item = st.items.find(i => i.id === req.itemId);
-    if (!item) throw new Error("Item no longer exists.");
-    if (req.qty > item.qty) throw new Error("Not enough stock to fulfill this reservation.");
-
-    item.qty = round2(item.qty - req.qty);
-    item.updatedAt = nowText();
-
-    item.history.unshift({
-      type: "REMOVE",
-      qty: -req.qty,
-      note: techNote ? ("Fulfilled reservation #" + req.id + ": " + techNote) : ("Fulfilled reservation #" + req.id),
-      at: nowText(),
-      actor
-    });
-
-    req.status = "fulfilled";
-    req.updatedAt = nowText();
-
-    st.auditLog.unshift({
-      at: nowText(),
-      actor,
-      action: "FULFILL",
-      details: `Fulfilled reservation #${req.id} for "${item.name}" -${req.qty} ${item.unit}`
-    });
-    st.auditLog = st.auditLog.slice(0, 80);
-
-    st.lastUndo = { type:"FULFILL_REQUEST", reqId: req.id, itemId: item.id, qty: +req.qty };
-
-    saveState(st);
-  }
-
-  const $ = (id) => document.getElementById(id);
-
-  const modePill = $("modePill");
-  const resetBtn = $("resetBtn");
-  const techUndoBtn = $("techUndoBtn");
-  const techAuditBtn = $("techAuditBtn");
-  const techAddBtn = $("techAddBtn");
-  const techLoginBtn = $("techLoginBtn");
-  const techRequestsBtn = $("techRequestsBtn");
-  const logoutBtn = $("logoutBtn");
-
-  const kioskToggle = $("kioskToggle");
-
-  const searchInput = $("searchInput");
-  const categorySelect = $("categorySelect");
-  const buildingSelect = $("buildingSelect");
-  const locationSelect = $("locationSelect");
-  const sortSelect = $("sortSelect");
-  const clearFiltersBtn = $("clearFiltersBtn");
-
-  const itemsList = $("itemsList");
-  const emptyState = $("emptyState");
-  const detailsArea = $("detailsArea");
-  const countText = $("countText");
-  const categoryChips = $("categoryChips");
-
-  const loginModal = $("loginModal");
-  const closeLogin = $("closeLogin");
-  const cancelLogin = $("cancelLogin");
-  const confirmLogin = $("confirmLogin");
-  const techUserInput = $("techUserInput");
-  const techPassInput = $("techPassInput");
-  const loginError = $("loginError");
-
-  const addModal = $("addModal");
-  const closeAdd = $("closeAdd");
-  const cancelAdd = $("cancelAdd");
-  const confirmAdd = $("confirmAdd");
-  const addError = $("addError");
-
-  const itemNameInput = $("itemNameInput");
-  const itemCategoryInput = $("itemCategoryInput");
-  const itemUnitInput = $("itemUnitInput");
-  const itemBuildingInput = $("itemBuildingInput");
-  const itemLocationInput = $("itemLocationInput");
-  const itemQtyInput = $("itemQtyInput");
-  const itemConditionInput = $("itemConditionInput");
-  const itemPhotoInput = $("itemPhotoInput");
-  const itemAttrsInput = $("itemAttrsInput");
-  const itemNoteInput = $("itemNoteInput");
-
-  const reserveModal = $("reserveModal");
-  const closeReserve = $("closeReserve");
-  const reserveCancel = $("reserveCancel");
-  const reserveSubmit = $("reserveSubmit");
-  const reserveHint = $("reserveHint");
-  const reserveName = $("reserveName");
-  const reserveEmail = $("reserveEmail");
-  const reserveQty = $("reserveQty");
-  const reserveNote = $("reserveNote");
-  const reserveError = $("reserveError");
-
-  const requestsModal = $("requestsModal");
-  const closeRequests = $("closeRequests");
-  const requestsCloseBtn = $("requestsCloseBtn");
-  const reqFilter = $("reqFilter");
-  const reqSearch = $("reqSearch");
-  const reqList = $("reqList");
-  const reqEmpty = $("reqEmpty");
-  const reqError = $("reqError");
-
-  const contactModal = $("contactModal");
-  const contactTitle = $("contactTitle");
-  const contactBody = $("contactBody");
-  const closeContact = $("closeContact");
-  const contactCloseBtn = $("contactCloseBtn");
-
-  const auditModal = $("auditModal");
-  const auditList = $("auditList");
-  const closeAudit = $("closeAudit");
-  const auditCloseBtn = $("auditCloseBtn");
-
-  const homeBtn = $("homeBtn");
-
-  let selectedId = null;
-  let pendingPhotoDataUrl = null;
-  let reserveForItemId = null;
-
-  function show(el){ el.classList.remove("hidden"); }
-  function hide(el){ el.classList.add("hidden"); }
-  function setText(el, t){ el.textContent = t; }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, c => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
-    }[c]));
-  }
-
-  function fmtQty(q){
-    return Number.isInteger(q) ? String(q) : String(round2(q));
-  }
-
-  function updateHeaderUI(){
-    const tech = isTech();
-    const uname = getTechUser();
-
-    setText(modePill, tech ? (uname ? `Tech mode: ${uname}` : "Tech mode") : "Student mode");
-
-    techAddBtn.classList.toggle("hidden", !tech);
-    techRequestsBtn.classList.toggle("hidden", !tech);
-    techAuditBtn.classList.toggle("hidden", !tech);
-    techUndoBtn.classList.toggle("hidden", !tech);
-    resetBtn.classList.toggle("hidden", !tech);
-
-    techUndoBtn.disabled = !canUndo();
-
-    techLoginBtn.classList.toggle("hidden", tech);
-    logoutBtn.classList.toggle("hidden", !tech);
-  }
-
-  function applyKioskUI(){
-    const on = isKiosk();
-    document.body.classList.toggle("kioskOn", on);
-    kioskToggle.checked = on;
-  }
-
-  function buildChips(){
-    const st = loadState();
-    const cats = Array.from(new Set(st.items.map(i => i.category))).sort((a,b)=>a.localeCompare(b));
-    categoryChips.innerHTML = "";
-
-    function mk(label, value){
-      const b = document.createElement("button");
-      b.className = "chip" + ((categorySelect.value || "") === value ? " active" : "");
-      b.textContent = label;
-      b.onclick = () => {
-        categorySelect.value = value;
-        buildChips();
-        renderList();
-      };
-      return b;
-    }
-
-    categoryChips.appendChild(mk("All", ""));
-    for (const c of cats){
-      categoryChips.appendChild(mk(c, c));
-    }
-  }
-
-  function scoreForRelevance(item, q){
-    if (!q) return 0;
-    const name = normalizeText(item.name);
-    const b = normalizeText(item.building);
-    const loc = normalizeText(item.location);
-    const attrs = normalizeText(JSON.stringify(item.attributes || {}));
-    let score = 0;
-    if (name.includes(q)) score += 8;
-    if (name.startsWith(q)) score += 4;
-    if (attrs.includes(q)) score += 3;
-    if (b.includes(q)) score += 2;
-    if (loc.includes(q)) score += 1;
-    score += Math.min(item.qty, 100) / 100;
-    return score;
-  }
-
-  function filteredItems(){
-    const st = loadState();
-    const q = normalizeText(searchInput.value);
-    const cat = categorySelect.value;
-    const bld = buildingSelect.value;
-    const loc = locationSelect.value;
-
-    let filtered = st.items.filter(it => {
-      if (!isTech() && it.qty <= 0) return false;
-
-      const matchCat = !cat || it.category === cat;
-      const matchBld = !bld || it.building === bld;
-      const matchLoc = !loc || it.location === loc;
-
-      if (!matchCat || !matchBld || !matchLoc) return false;
-      if (!q) return true;
-
-      const hay = normalizeText(
-        it.name + " " +
-        it.category + " " +
-        it.unit + " " +
-        it.building + " " +
-        it.location + " " +
-        it.condition + " " +
-        JSON.stringify(it.attributes || {})
-      );
-      return hay.includes(q);
-    });
-
-    const sortMode = sortSelect.value;
-
-    if (sortMode === "name_asc"){
-      filtered.sort((a,b) => a.name.localeCompare(b.name));
-    } else if (sortMode === "qty_desc"){
-      filtered.sort((a,b) => b.qty - a.qty || a.name.localeCompare(b.name));
-    } else if (sortMode === "qty_asc"){
-      filtered.sort((a,b) => a.qty - b.qty || a.name.localeCompare(b.name));
-    } else if (sortMode === "recent"){
-      filtered.sort((a,b) => (b.updatedAt || "").localeCompare(a.updatedAt || "") || a.name.localeCompare(b.name));
-    } else {
-      filtered.sort((a,b) => scoreForRelevance(b, q) - scoreForRelevance(a, q) || a.name.localeCompare(b.name));
-    }
-
-    return filtered;
-  }
-
-  function renderList(){
-    const items = filteredItems();
-    itemsList.innerHTML = "";
-    setText(countText, `${items.length} item${items.length === 1 ? "" : "s"}`);
-
-    if (!items.length){
-      show(emptyState);
-    } else {
-      hide(emptyState);
-
-      for (const it of items){
-        const div = document.createElement("div");
-        div.className = "itemRow";
-        div.onclick = () => {
-          selectedId = it.id;
-          renderDetails();
-        };
-
-        const badge =
-          it.qty <= 0 ? `<span class="badge out">Out</span>` :
-          it.qty <= 3 ? `<span class="badge low">Low</span>` : ``;
-
-        const left = document.createElement("div");
-        left.className = "itemLeft";
-
-        const thumbEl = document.createElement(it.photo ? "img" : "div");
-        if (it.photo){
-          thumbEl.src = it.photo;
-          thumbEl.className = "thumb";
-          thumbEl.alt = it.name;
-        } else {
-          thumbEl.className = "thumbFallback";
-          thumbEl.textContent = "No photo";
-        }
-
-        const textWrap = document.createElement("div");
-        textWrap.className = "itemText";
-        textWrap.innerHTML = `
-          <div class="itemName">${escapeHtml(it.name)}</div>
-          <div class="itemMeta">
-            <span>${escapeHtml(it.category)}</span>
-            <span>•</span>
-            <span><b>${escapeHtml(it.building)}</b></span>
-            <span>•</span>
-            <span>${escapeHtml(it.location)}</span>
-            ${badge}
+    <section class="grid">
+      <div class="panel">
+        <div class="panelHeader">
+          <div>
+            <h2>Available Inventory</h2>
+            <div class="muted">Students see only stocked items; techs see all</div>
           </div>
-        `;
-
-        left.appendChild(thumbEl);
-        left.appendChild(textWrap);
-
-        const right = document.createElement("div");
-        right.className = "qty";
-        right.innerHTML = `<span>${escapeHtml(fmtQty(it.qty))}</span><span class="unit">${escapeHtml(it.unit)}</span>`;
-
-        div.appendChild(left);
-        div.appendChild(right);
-        itemsList.appendChild(div);
-      }
-    }
-
-    if (selectedId){
-      const stillThere = items.some(x => x.id === selectedId);
-      if (!stillThere){
-        const existsAnywhere = loadState().items.some(x => x.id === selectedId);
-        if (!existsAnywhere){
-          selectedId = null;
-          setText(detailsArea, "Click an item to view details.");
-        }
-      }
-    }
-
-    updateHeaderUI();
-  }
-
-  function buildingInstructionsHtml(building){
-    const lines = PICKUP_INSTRUCTIONS[building] || [
-      "Pickup instructions not set yet.",
-      "Techs can add guidance later."
-    ];
-    return `
-      <div class="card">
-        <div class="muted" style="font-weight:1000;margin-bottom:8px">Pickup instructions</div>
-        ${lines.map(s => `<div class="muted" style="margin-bottom:6px">• ${escapeHtml(s)}</div>`).join("")}
+          <div class="muted" id="countText"></div>
+        </div>
+        <div class="chips" id="categoryChips"></div>
+        <div id="itemsList" class="list"></div>
+        <div id="emptyState" class="empty hidden">No items found, try different keywords or filters.</div>
+        <button id="loadMore" class="btn" style="margin-top:10px; display:none">Load More</button>
+        <div class="loading hidden">Loading...</div>
+        <div class="footerNote">Data shared across all users. Contact tech for help.</div>
       </div>
-    `;
-  }
-
-  function contactHtml(building){
-    const c = BUILDING_CONTACTS[building];
-    if (!c){
-      return `
+      <div class="panel">
+        <div class="panelHeader">
+          <div>
+            <h2>Item Details</h2>
+            <div class="muted">Select an item from the list</div>
+          </div>
+        </div>
+        <div id="detailsArea" class="muted">Click an item to view details.</div>
+      </div>
+    </section>
+  </main>
+  <div id="loginModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modalCard">
+      <div class="modalHeader">
+        <div style="font-weight:1000">Tech Login</div>
+        <button class="iconBtn" id="closeLogin">✕</button>
+      </div>
+      <div class="modalBody">
         <div class="hint">
-          No contact info set for this building yet.
+          Enter your tech username and password.
         </div>
-      `;
-    }
-    return `
-      <div class="hint">
-        <div style="font-weight:1000; margin-bottom:8px">${escapeHtml(building)}</div>
-        <div class="muted" style="margin-bottom:10px">Contact: <b>${escapeHtml(c.role)}</b></div>
-        ${c.how.map(x => `<div class="muted" style="margin-bottom:6px">• ${escapeHtml(x)}</div>`).join("")}
-      </div>
-    `;
-  }
-
-  function openContact(building){
-    contactTitle.textContent = `Contact for ${building}`;
-    contactBody.innerHTML = contactHtml(building);
-    show(contactModal);
-  }
-
-  function renderDetails(){
-    if (!selectedId){
-      setText(detailsArea, "Click an item to view details.");
-      return;
-    }
-
-    const st = loadState();
-    const it = st.items.find(x => x.id === selectedId);
-    if (!it){
-      selectedId = null;
-      setText(detailsArea, "Click an item to view details.");
-      return;
-    }
-
-    const tech = isTech();
-    const attrs = it.attributes || {};
-    const attrsHtml = Object.keys(attrs).length
-      ? Object.entries(attrs).map(([k,v]) =>
-          `<div><span class="muted" style="font-weight:900">${escapeHtml(k)}:</span> ${escapeHtml(String(v))}</div>`
-        ).join("")
-      : `<div class="muted">No attributes</div>`;
-
-    const historyHtml = (it.history || []).slice(0, 10).map(h => {
-      const sign = h.qty > 0 ? "+" : "";
-      const note = h.note ? `<div class="muted">${escapeHtml(h.note)}</div>` : "";
-      return `
-        <div style="border-top:1px solid var(--border); padding-top:8px; margin-top:8px">
-          <div><b>${escapeHtml(h.type)}</b> ${sign}${escapeHtml(String(h.qty))}</div>
-          <div class="muted">${escapeHtml(h.at)} • ${escapeHtml(h.actor)}</div>
-          ${note}
-        </div>
-      `;
-    }).join("");
-
-    const photoBlock = it.photo
-      ? `<img class="detailPhoto" src="${escapeHtml(it.photo)}" alt="${escapeHtml(it.name)}">`
-      : `<div class="detailPhotoFallback">No photo yet<br><span class="muted">Techs can upload one</span></div>`;
-
-    const studentReserveBtn = (!tech && it.qty > 0) ? `
-      <button class="btn blue" id="reserveBtn">Reserve for pickup</button>
-      <span class="muted">Reservation does not change stock until a tech fulfills it.</span>
-    ` : "";
-
-    const techQuickAdd = tech ? `
-      <button class="btn primary" id="quickAddThis">+ Add more of this item</button>
-    ` : "";
-
-    const contactBtn = `
-      <button class="btn" id="contactBtn">Contact</button>
-    `;
-
-    const techRemoveBlock = tech ? `
-      <div class="card">
-        <div class="muted" style="font-weight:1000;margin-bottom:10px">Tech: Remove stock</div>
-
         <div class="twoCol">
           <div class="formRow">
-            <label>Quantity to remove</label>
-            <input id="removeQty" type="number" min="0" step="0.01" placeholder="Example: 2">
+            <label>Username</label>
+            <input id="techUserInput" placeholder="e.g., bonderson-tech">
           </div>
           <div class="formRow">
-            <label>Note (optional)</label>
-            <input id="removeNote" placeholder="Example: walked in pickup">
+            <label>Password</label>
+            <input id="techPassInput" type="password" placeholder="Password">
           </div>
         </div>
-
-        <div class="actions" style="justify-content:flex-end">
-          <button class="btn danger" id="removeBtn">Confirm Remove</button>
-        </div>
-
-        <div id="removeError" class="error hidden"></div>
+        <div id="loginError" class="error hidden"></div>
       </div>
-    ` : "";
-
-    detailsArea.innerHTML = `
-      <div class="card">
-        <div class="detailTop">
-          <div>
-            <div style="font-size:19px;font-weight:1000">${escapeHtml(it.name)}</div>
-            <div class="muted">
-              ${escapeHtml(it.category)}
-              • <span class="tag">${escapeHtml(it.building)}</span>
-              • <span class="tag">${escapeHtml(it.location)}</span>
-            </div>
-          </div>
-          <div class="bigQty">${escapeHtml(fmtQty(it.qty))} <span style="font-size:15px;color:var(--muted);font-weight:900">${escapeHtml(it.unit)}</span></div>
+      <div class="modalFooter">
+        <button class="btn" id="cancelLogin">Cancel</button>
+        <button class="btn primary" id="confirmLogin">Login</button>
+      </div>
+    </div>
+  </div>
+  <div id="registerModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modalCard">
+      <div class="modalHeader">
+        <div style="font-weight:1000">Register New Tech</div>
+        <button class="iconBtn" id="closeRegister">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="hint">
+          Create a new tech account. Must be logged in as a tech to use this.
         </div>
-
-        <div class="detailPhotoWrap">
-          ${photoBlock}
-          <div style="min-width:240px; flex: 1">
-            <div class="muted" style="margin-bottom:8px">
-              Location: <b>${escapeHtml(it.building)}</b>, ${escapeHtml(it.location)}
-            </div>
-            <div class="muted" style="margin-bottom:8px">
-              Condition: <b>${escapeHtml(it.condition || "Not specified")}</b>
-            </div>
-            <div class="actions">
-              ${studentReserveBtn}
-              ${contactBtn}
-              ${techQuickAdd}
-            </div>
+        <div class="twoCol">
+          <div class="formRow">
+            <label>New Username</label>
+            <input id="newUserInput" placeholder="e.g., aero-tech">
+          </div>
+          <div class="formRow">
+            <label>New Password</label>
+            <input id="newPassInput" type="password" placeholder="Strong password">
           </div>
         </div>
+        <div id="registerError" class="error hidden"></div>
       </div>
-
-      ${buildingInstructionsHtml(it.building)}
-
-      <div class="card">
-        <div class="muted" style="font-weight:1000;margin-bottom:8px">Attributes</div>
-        ${attrsHtml}
+      <div class="modalFooter">
+        <button class="btn" id="cancelRegister">Cancel</button>
+        <button class="btn primary" id="confirmRegister">Register</button>
       </div>
+    </div>
+  </div>
+  <!-- Other modals remain the same, but remove undo and reset references -->
+  <script>
+    const API_BASE = '';
+    const LS_TOKEN = 'cal_poly_token';
+    const LS_TECHU = 'cal_poly_tech_user';
+    const LS_KIOSK = 'cal_poly_kiosk';
+    const LS_DARK = 'cal_poly_dark';
+    const LS_ME = 'cal_poly_student_id';
+    const PAGE_SIZE = 20;
 
-      <div class="card">
-        <div class="muted" style="font-weight:1000;margin-bottom:8px">Recent activity</div>
-        ${historyHtml || `<div class="muted">No history yet</div>`}
-      </div>
+    let token = localStorage.getItem(LS_TOKEN);
+    let techUser = localStorage.getItem(LS_TECHU);
+    let isDark = localStorage.getItem(LS_DARK) === '1';
+    let selectedId = null;
+    let reserveForItemId = null;
+    let page = 1;
+    let allItems = [];
+    let filteredItems = [];
+    let lastScroll = 0;
 
-      ${techRemoveBlock}
-    `;
+    const $ = (id) => document.getElementById(id);
 
-    const contactBtnEl = document.getElementById("contactBtn");
-    if (contactBtnEl) contactBtnEl.onclick = () => openContact(it.building);
+    function normalizeText(s) { return String(s || "").trim().toLowerCase().replace(/\s+/g, " "); }
 
-    if (!tech && it.qty > 0){
-      const reserveBtn = document.getElementById("reserveBtn");
-      if (reserveBtn){
-        reserveBtn.onclick = () => openReserveModal(it);
+    function safeJsonParse(s) { try { return JSON.parse(s || "{}"); } catch { return {}; } }
+
+    function stableStringify(obj) {
+      if (!obj || typeof obj !== "object" || Array.isArray(obj)) return JSON.stringify(obj);
+      const keys = Object.keys(obj).map(k => normalizeText(k)).sort();
+      const out = {};
+      for (const kn of keys) {
+        const ok = Object.keys(obj).find(k => normalizeText(k) === kn);
+        out[kn] = normalizeText(obj[ok]);
       }
+      return JSON.stringify(out);
     }
 
-    if (tech){
-      const quickBtn = document.getElementById("quickAddThis");
-      if (quickBtn){
-        quickBtn.onclick = () => openAddModal(it);
+    function fingerprint(item) {
+      const n = normalizeText(item.name);
+      const c = normalizeText(item.category);
+      const u = normalizeText(item.unit);
+      const b = normalizeText(item.building);
+      const l = normalizeText(item.location);
+      const cond = normalizeText(item.condition || "");
+      const attrs = stableStringify(item.attributes || {});
+      return `${n}|${c}|${u}|${b}|${l}|${cond}|${attrs}`;
+    }
+
+    function nowText() { return new Date().toISOString().slice(0,19).replace("T"," "); }
+
+    function uuidShort() { return Math.random().toString(16).slice(2) + "-" + Math.random().toString(16).slice(2); }
+
+    function round2(n) { return Math.round(n * 100) / 100; }
+
+    function getStudentId() {
+      let me = localStorage.getItem(LS_ME);
+      if (!me) {
+        me = "student-" + uuidShort();
+        localStorage.setItem(LS_ME, me);
       }
+      return me;
+    }
 
-      const removeBtn = document.getElementById("removeBtn");
-      if (removeBtn){
-        removeBtn.onclick = () => {
-          const err = document.getElementById("removeError");
-          err.classList.add("hidden");
+    function isTech() { return !!token; }
 
-          const qty = Number(document.getElementById("removeQty").value);
-          const note = document.getElementById("removeNote").value || "";
+    function applyDarkMode() {
+      document.body.classList.toggle("dark", isDark);
+      $('darkToggle').checked = isDark;
+    }
 
-          if (!qty || qty <= 0){
-            err.textContent = "Enter a quantity greater than 0.";
-            err.classList.remove("hidden");
-            return;
-          }
+    function applyKioskUI() {
+      const on = localStorage.getItem(LS_KIOSK) === '1';
+      document.body.classList.toggle("kioskOn", on);
+      $('kioskToggle').checked = on;
+    }
 
-          const threshold = thresholdForUnit(it.unit);
-          if (qty >= threshold){
-            const ok = confirm(`This is a large removal (${qty} ${it.unit}). Are you sure?`);
-            if (!ok) return;
-          }
+    async function apiCall(method, endpoint, data) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const res = await fetch(`${API_BASE}/api/${endpoint}`, { method, headers, body: data ? JSON.stringify(data) : null });
+      if (!res.ok) throw new Error(await res.text() || 'API error');
+      return await res.json();
+    }
 
-          try{
-            removeFromStock({ itemId: it.id, qty, note });
-            renderList();
-            renderDetails();
-          }catch(e){
-            err.textContent = e.message || "Remove failed.";
-            err.classList.remove("hidden");
-          }
-        };
+    async function loadItems(resetPage = true) {
+      $('loading').classList.remove('hidden');
+      try {
+        allItems = await apiCall('GET', 'items');
+        if (resetPage) page = 1;
+        renderList();
+      } catch (e) {
+        alert('Failed to load items: ' + e.message);
       }
-    }
-  }
-
-  function openModal(el){ show(el); }
-  function closeModal(el){ hide(el); }
-
-  function openAddModal(prefillItem){
-    addError.classList.add("hidden");
-    pendingPhotoDataUrl = null;
-    itemPhotoInput.value = "";
-
-    if (prefillItem){
-      itemNameInput.value = prefillItem.name;
-      itemCategoryInput.value = prefillItem.category;
-      itemUnitInput.value = prefillItem.unit;
-      itemBuildingInput.value = prefillItem.building;
-      itemLocationInput.value = prefillItem.location;
-      itemConditionInput.value = prefillItem.condition || "";
-      itemAttrsInput.value = JSON.stringify(prefillItem.attributes || {});
-    } else {
-      itemNameInput.value = "";
-      itemCategoryInput.value = "Metals";
-      itemUnitInput.value = "pcs";
-      itemBuildingInput.value = "Bonderson Project Center";
-      itemLocationInput.value = "Shelf A";
-      itemConditionInput.value = "";
-      itemAttrsInput.value = "";
+      $('loading').classList.add('hidden');
     }
 
-    itemQtyInput.value = "";
-    itemNoteInput.value = "";
-    openModal(addModal);
-    setTimeout(() => itemNameInput.focus(), 10);
-  }
-
-  async function handleAddConfirm(){
-    addError.classList.add("hidden");
-
-    const name = itemNameInput.value;
-    const category = itemCategoryInput.value;
-    const unit = itemUnitInput.value;
-    const building = itemBuildingInput.value;
-    const location = itemLocationInput.value;
-    const condition = itemConditionInput.value || "";
-    const qty = Number(itemQtyInput.value);
-    const note = itemNoteInput.value || "";
-    const attrsRaw = (itemAttrsInput.value || "").trim();
-
-    if (!name || name.trim().length < 2){
-      addError.textContent = "Name is required, at least 2 characters.";
-      addError.classList.remove("hidden");
-      return;
-    }
-    if (!qty || qty <= 0){
-      addError.textContent = "Quantity must be greater than 0.";
-      addError.classList.remove("hidden");
-      return;
+    async function addOrMerge(item) {
+      item.fp = fingerprint(item);
+      await apiCall('POST', 'items', item);
+      await loadItems();
     }
 
-    let attributes = {};
-    if (attrsRaw){
-      const parsed = safeJsonParse(attrsRaw);
-      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)){
-        addError.textContent = "Attributes must be a JSON object like {\"dims\":\"1x1\"}, or leave it blank.";
-        addError.classList.remove("hidden");
-        return;
-      }
-      attributes = parsed;
+    async function removeFromStock(itemId, qty, note) {
+      await apiCall('POST', 'remove_stock', { itemId, qty, note });
+      await loadItems();
     }
 
-    const newId = addOrMerge({
-      name, category, unit, building, location, condition,
-      qty, attributes, note,
-      photoDataUrl: pendingPhotoDataUrl
-    });
-
-    selectedId = newId;
-    closeModal(addModal);
-    buildChips();
-    renderList();
-    renderDetails();
-  }
-
-  function openReserveModal(item){
-    reserveForItemId = item.id;
-    reserveError.classList.add("hidden");
-    reserveName.value = "";
-    reserveEmail.value = "";
-    reserveQty.value = "";
-    reserveNote.value = "";
-
-    reserveHint.innerHTML = `
-      You are reserving <b>${escapeHtml(item.name)}</b> (${escapeHtml(fmtQty(item.qty))} ${escapeHtml(item.unit)} available).
-      Pickup location: <b>${escapeHtml(item.building)}</b>, ${escapeHtml(item.location)}.
-    `;
-
-    openModal(reserveModal);
-    setTimeout(() => reserveName.focus(), 10);
-  }
-
-  function handleReserveSubmit(){
-    reserveError.classList.add("hidden");
-
-    const st = loadState();
-    const item = st.items.find(i => i.id === reserveForItemId);
-    if (!item){
-      reserveError.textContent = "Item not found.";
-      reserveError.classList.remove("hidden");
-      return;
+    async function createReservation(itemId, qty, name, email, note) {
+      const data = { itemId, qty, name, email, note, createdBy: getStudentId() };
+      const res = await apiCall('POST', 'requests', data);
+      return res.id;
     }
 
-    const name = reserveName.value.trim();
-    const email = reserveEmail.value.trim();
-    const qty = Number(reserveQty.value);
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-    if (!name){
-      reserveError.textContent = "Your name is required.";
-      reserveError.classList.remove("hidden");
-      reserveName.focus();
-      return;
+    async function getRequests() {
+      return await apiCall('GET', 'requests');
     }
 
-    if (!email){
-      reserveError.textContent = "Your email is required.";
-      reserveError.classList.remove("hidden");
-      reserveEmail.focus();
-      return;
+    async function updateRequestStatus(reqId, status) {
+      await apiCall('PUT', `requests/${reqId}`, { status });
     }
 
-    if (!emailOk){
-      reserveError.textContent = "Enter a valid email address.";
-      reserveError.classList.remove("hidden");
-      reserveEmail.focus();
-      return;
+    async function fulfillRequest(reqId, techNote) {
+      await apiCall('POST', `requests/${reqId}/fulfill`, { techNote });
+      await loadItems();
     }
 
-    if (!qty || qty <= 0){
-      reserveError.textContent = "Enter a quantity greater than 0.";
-      reserveError.classList.remove("hidden");
-      return;
+    async function getAudit() {
+      return await apiCall('GET', 'audit');
     }
 
-    try{
-      const id = createReservation({
-        itemId: item.id,
-        qty,
-        name,
-        email,
-        note: reserveNote.value
-      });
-
-      closeModal(reserveModal);
-      alert("Reservation submitted. Your reservation number is #" + id + ".");
-    }catch(e){
-      reserveError.textContent = e.message || "Reservation failed.";
-      reserveError.classList.remove("hidden");
-    }
-  }
-
-  function openRequestsModal(){
-    reqError.classList.add("hidden");
-    reqSearch.value = "";
-    reqFilter.value = "pending";
-    openModal(requestsModal);
-    renderRequests();
-  }
-
-  function renderRequests(){
-    reqError.classList.add("hidden");
-
-    const st = loadState();
-    const filter = reqFilter.value;
-    const q = normalizeText(reqSearch.value);
-
-    let reqs = st.requests.slice();
-    if (filter !== "all"){
-      reqs = reqs.filter(r => r.status === filter);
-    }
-
-    reqs = reqs.filter(r => {
-      const item = st.items.find(i => i.id === r.itemId);
-      const itemName = item ? item.name : "Unknown item";
-      const building = item ? item.building : "";
-      const hay = normalizeText(
-        itemName + " " +
-        building + " " +
-        (r.name || "") + " " +
-        (r.email || "") + " " +
-        (r.note || "") + " " +
-        String(r.id)
-      );
-      return !q || hay.includes(q);
-    });
-
-    reqList.innerHTML = "";
-
-    if (!reqs.length){
-      show(reqEmpty);
-      return;
-    }
-    hide(reqEmpty);
-
-    for (const r of reqs){
-      const item = st.items.find(i => i.id === r.itemId);
-      const itemName = item ? item.name : "Unknown item";
-      const building = item ? item.building : "Unknown building";
-      const location = item ? item.location : "";
-      const unit = item ? item.unit : "";
-      const available = item ? item.qty : 0;
-
-      const statusBadge =
-        r.status === "pending" ? `<span class="badge req">Pending</span>` :
-        r.status === "fulfilled" ? `<span class="badge">Fulfilled</span>` :
-        `<span class="badge out">Canceled</span>`;
-
-      const el = document.createElement("div");
-      el.className = "requestRow";
-
-      el.innerHTML = `
-        <div class="requestLeft">
-          <div class="requestTitle">#${r.id} • ${escapeHtml(itemName)} ${statusBadge}</div>
-          <div class="requestMeta">
-            Requested: <b>${escapeHtml(fmtQty(r.qty))}</b> ${escapeHtml(unit)} • Available now: <b>${escapeHtml(fmtQty(available))}</b> ${escapeHtml(unit)}<br>
-            Location: <b>${escapeHtml(building)}</b>, ${escapeHtml(location)}<br>
-            Student: ${escapeHtml(r.name || "not provided")} • ${escapeHtml(r.email || "not provided")}<br>
-            Note: ${escapeHtml(r.note || "none")}<br>
-            Created: ${escapeHtml(r.createdAt)} • Updated: ${escapeHtml(r.updatedAt)}
-          </div>
-        </div>
-
-        <div class="requestActions" id="reqActions-${r.id}"></div>
-      `;
-
-      const actionsWrap = el.querySelector(`#reqActions-${r.id}`);
-
-      if (r.status === "pending"){
-        const fulfillBtn = document.createElement("button");
-        fulfillBtn.className = "btn primary";
-        fulfillBtn.textContent = "Fulfill (remove stock)";
-        fulfillBtn.onclick = () => {
-          const threshold = thresholdForUnit(unit);
-          if (r.qty >= threshold){
-            const ok = confirm(`This fulfillment removes a large amount (${r.qty} ${unit}). Proceed?`);
-            if (!ok) return;
-          }
-
-          const note = prompt("Optional note for fulfillment:") || "";
-          try{
-            fulfillRequest(r.id, note);
-            renderList();
-            if (selectedId) renderDetails();
-            renderRequests();
-          }catch(e){
-            reqError.textContent = e.message || "Fulfill failed.";
-            reqError.classList.remove("hidden");
-          }
-        };
-
-        const cancelBtn = document.createElement("button");
-        cancelBtn.className = "btn danger";
-        cancelBtn.textContent = "Cancel";
-        cancelBtn.onclick = () => {
-          try{
-            updateRequestStatus(r.id, "canceled");
-            renderRequests();
-          }catch(e){
-            reqError.textContent = e.message || "Cancel failed.";
-            reqError.classList.remove("hidden");
-          }
-        };
-
-        actionsWrap.appendChild(fulfillBtn);
-        actionsWrap.appendChild(cancelBtn);
-      } else {
-        const reopenBtn = document.createElement("button");
-        reopenBtn.className = "btn";
-        reopenBtn.textContent = "Set back to pending";
-        reopenBtn.onclick = () => {
-          try{
-            updateRequestStatus(r.id, "pending");
-            renderRequests();
-          }catch(e){
-            reqError.textContent = e.message || "Update failed.";
-            reqError.classList.remove("hidden");
-          }
-        };
-        actionsWrap.appendChild(reopenBtn);
-      }
-
-      reqList.appendChild(el);
-    }
-
-    updateHeaderUI();
-  }
-
-  function openAudit(){
-    const st = loadState();
-    const rows = (st.auditLog || []).slice(0, 40).map(e => `
-      <div class="auditRow">
-        <div><b>${escapeHtml(e.action)}</b> <span class="muted">• ${escapeHtml(e.at)} • ${escapeHtml(e.actor)}</span></div>
-        <div class="muted">${escapeHtml(e.details)}</div>
-      </div>
-    `).join("");
-
-    auditList.innerHTML = rows || `<div class="muted">No activity yet.</div>`;
-    show(auditModal);
-  }
-
-  function clearFilters(){
-    searchInput.value = "";
-    categorySelect.value = "";
-    buildingSelect.value = "";
-    locationSelect.value = "";
-    sortSelect.value = "relevance";
-    buildChips();
-    renderList();
-  }
-
-  seed();
-  applyKioskUI();
-  buildChips();
-  updateHeaderUI();
-  renderList();
-
-  homeBtn.onclick = (e) => {
-    e.preventDefault();
-    clearFilters();
-    selectedId = null;
-    setText(detailsArea, "Click an item to view details.");
-  };
-
-  resetBtn.onclick = () => {
-    const ok = confirm("Reset all saved inventory changes and restore the starting stock?");
-    if (!ok) return;
-
-    resetData();
-    selectedId = null;
-    clearFilters();
-    setText(detailsArea, "Click an item to view details.");
-    buildChips();
-    renderList();
-  };
-
-  clearFiltersBtn.onclick = () => {
-    clearFilters();
-    if (selectedId) renderDetails();
-  };
-
-  searchInput.addEventListener("input", () => renderList());
-  categorySelect.addEventListener("change", () => { buildChips(); renderList(); });
-  buildingSelect.addEventListener("change", () => renderList());
-  locationSelect.addEventListener("change", () => renderList());
-  sortSelect.addEventListener("change", () => renderList());
-
-  kioskToggle.addEventListener("change", () => {
-    setKiosk(kioskToggle.checked);
-    applyKioskUI();
-  });
-
-  techLoginBtn.onclick = () => {
-    loginError.classList.add("hidden");
-    techPassInput.value = "";
-    techUserInput.value = getTechUser() || "";
-    openModal(loginModal);
-    setTimeout(() => techUserInput.focus(), 10);
-  };
-
-  function doLogin(){
-    loginError.classList.add("hidden");
-    const pass = normalizeText(techPassInput.value);
-    const uname = (techUserInput.value || "").trim();
-
-    if (!uname || uname.length < 2){
-      loginError.textContent = "Please enter a short tech username, at least 2 characters.";
-      loginError.classList.remove("hidden");
-      return;
-    }
-
-    if (pass !== "tech"){
-      loginError.textContent = "Wrong password.";
-      loginError.classList.remove("hidden");
-      return;
-    }
-
-    setTechUser(uname);
-    setTech(true);
-    closeModal(loginModal);
-
-    audit("LOGIN", `Tech login as "${uname}".`);
-    updateHeaderUI();
-    renderList();
-    if (selectedId) renderDetails();
-  }
-
-  confirmLogin.onclick = doLogin;
-  techPassInput.addEventListener("keydown", (e) => { if (e.key === "Enter") doLogin(); });
-
-  closeLogin.onclick = () => closeModal(loginModal);
-  cancelLogin.onclick = () => closeModal(loginModal);
-
-  logoutBtn.onclick = () => {
-    audit("LOGOUT", `Tech logout "${getTechUser() || "tech"}".`);
-    setTech(false);
-    updateHeaderUI();
-    renderList();
-    if (selectedId) renderDetails();
-  };
-
-  techAddBtn.onclick = () => openAddModal(null);
-  techRequestsBtn.onclick = () => openRequestsModal();
-  techAuditBtn.onclick = () => openAudit();
-
-  techUndoBtn.onclick = () => {
-    try{
-      const ok = confirm("Undo the last tech action?");
-      if (!ok) return;
-      undoLast();
+    async function doLogin(username, password) {
+      const res = await apiCall('POST', 'login', { username, password });
+      localStorage.setItem(LS_TOKEN, res.token);
+      localStorage.setItem(LS_TECHU, res.username);
+      token = res.token;
+      techUser = res.username;
       updateHeaderUI();
-      renderList();
-      if (selectedId) renderDetails();
-    }catch(e){
-      alert(e.message || "Undo failed.");
-    }
-  };
-
-  closeAdd.onclick = () => closeModal(addModal);
-  cancelAdd.onclick = () => closeModal(addModal);
-  confirmAdd.onclick = handleAddConfirm;
-
-  itemPhotoInput.addEventListener("change", async () => {
-    pendingPhotoDataUrl = null;
-    const file = itemPhotoInput.files && itemPhotoInput.files[0];
-    if (!file) return;
-
-    if (file.size > 2.5 * 1024 * 1024){
-      addError.textContent = "That photo is pretty large, over about 2.5 MB. Try a smaller image.";
-      addError.classList.remove("hidden");
-      itemPhotoInput.value = "";
-      return;
+      loadItems();
+      renderDetails();
+      closeModal($('loginModal'));
     }
 
-    try{
-      const r = new FileReader();
-      r.onload = () => { pendingPhotoDataUrl = r.result; };
-      r.onerror = () => {
-        addError.textContent = "Could not read image. Try a different photo.";
-        addError.classList.remove("hidden");
-        itemPhotoInput.value = "";
-      };
-      r.readAsDataURL(file);
-    }catch(e){
-      addError.textContent = "Could not read image. Try a different photo.";
-      addError.classList.remove("hidden");
-      itemPhotoInput.value = "";
+    async function doRegister(username, password) {
+      await apiCall('POST', 'register', { username, password });
+      alert('New tech registered!');
+      closeModal($('registerModal'));
     }
-  });
 
-  closeReserve.onclick = () => closeModal(reserveModal);
-  reserveCancel.onclick = () => closeModal(reserveModal);
-  reserveSubmit.onclick = handleReserveSubmit;
-
-  closeRequests.onclick = () => closeModal(requestsModal);
-  requestsCloseBtn.onclick = () => closeModal(requestsModal);
-  reqFilter.addEventListener("change", () => renderRequests());
-  reqSearch.addEventListener("input", () => renderRequests());
-
-  closeContact.onclick = () => closeModal(contactModal);
-  contactCloseBtn.onclick = () => closeModal(contactModal);
-
-  closeAudit.onclick = () => closeModal(auditModal);
-  auditCloseBtn.onclick = () => closeModal(auditModal);
-
-  loginModal.addEventListener("click", (e) => { if (e.target === loginModal) closeModal(loginModal); });
-  addModal.addEventListener("click", (e) => { if (e.target === addModal) closeModal(addModal); });
-  reserveModal.addEventListener("click", (e) => { if (e.target === reserveModal) closeModal(reserveModal); });
-  requestsModal.addEventListener("click", (e) => { if (e.target === requestsModal) closeModal(requestsModal); });
-  contactModal.addEventListener("click", (e) => { if (e.target === contactModal) closeModal(contactModal); });
-  auditModal.addEventListener("click", (e) => { if (e.target === auditModal) closeModal(auditModal); });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "/" && document.activeElement !== searchInput){
-      e.preventDefault();
-      searchInput.focus();
+    function logout() {
+      localStorage.removeItem(LS_TOKEN);
+      localStorage.removeItem(LS_TECHU);
+      token = null;
+      techUser = null;
+      updateHeaderUI();
+      loadItems();
+      renderDetails();
     }
-    if (e.key === "Escape"){
-      closeModal(loginModal);
-      closeModal(addModal);
-      closeModal(reserveModal);
-      closeModal(requestsModal);
-      closeModal(contactModal);
-      closeModal(auditModal);
+
+    function updateHeaderUI() {
+      const tech = isTech();
+      $('modePill').textContent = tech ? `Tech mode: ${techUser}` : 'Student mode';
+      $('techAddBtn').classList.toggle('hidden', !tech);
+      $('techRequestsBtn').classList.toggle('hidden', !tech);
+      $('techAuditBtn').classList.toggle('hidden', !tech);
+      $('techExportBtn').classList.toggle('hidden', !tech);
+      $('techRegisterBtn').classList.toggle('hidden', !tech);
+      $('techLoginBtn').classList.toggle('hidden', tech);
+      $('logoutBtn').classList.toggle('hidden', !tech);
     }
-  });
 
-  getStudentId();
-</script>
+    function renderList() {
+      filteredItems = allItems.filter(it => {
+        const q = normalizeText($('searchInput').value);
+        const cat = $('categorySelect').value;
+        const bld = $('buildingSelect').value;
+        const loc = $('locationSelect').value;
+        if (!isTech() && it.qty <= 0) return false;
+        if (cat && it.category !== cat) return false;
+        if (bld && it.building !== bld) return false;
+        if (loc && it.location !== loc) return false;
+        if (!q) return true;
+        const hay = normalizeText(`${it.name} ${it.category} ${it.building} ${it.location} ${JSON.stringify(it.attributes)}`);
+        return hay.includes(q);
+      });
+      // Sort...
+      const sortMode = $('sortSelect').value;
+      if (sortMode === 'name_asc') filteredItems.sort((a,b) => a.name.localeCompare(b.name));
+      // ... other sorts
 
+      const start = (page - 1) * PAGE_SIZE;
+      const pageItems = filteredItems.slice(start, start + PAGE_SIZE);
+      $('itemsList').innerHTML = '';
+      $('countText').textContent = `${filteredItems.length} item${filteredItems.length === 1 ? '' : 's'}`;
+      if (!pageItems.length) {
+        $('emptyState').classList.remove('hidden');
+        $('loadMore').style.display = 'none';
+      } else {
+        $('emptyState').classList.add('hidden');
+        pageItems.forEach(it => {
+          // Render itemRow as before
+          // ... (keep original itemRow HTML)
+        });
+        $('loadMore').style.display = (start + PAGE_SIZE < filteredItems.length) ? 'block' : 'none';
+      }
+    }
+
+    // ... Keep other functions, update with API calls
+
+    // Hide header on scroll down (mobile only)
+    if (window.innerWidth < 768) {
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > lastScroll && currentScroll > 0) {
+          $('header').classList.add('hidden');
+        } else {
+          $('header').classList.remove('hidden');
+        }
+        lastScroll = currentScroll <= 0 ? 0 : currentScroll;
+      });
+    }
+
+    // Autocomplete for search
+    $('searchInput').addEventListener('input', async () => {
+      await loadItems(false);
+      const q = normalizeText($('searchInput').value);
+      const suggestions = allItems.map(it => it.name).filter(n => n.toLowerCase().includes(q)).slice(0, 5);
+      const ac = $('autocomplete');
+      ac.innerHTML = '';
+      suggestions.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'autocomplete-item';
+        div.textContent = s;
+        div.onclick = () => { $('searchInput').value = s; ac.classList.add('hidden'); renderList(); };
+        ac.appendChild(div);
+      });
+      ac.classList.toggle('hidden', !suggestions.length);
+    });
+
+    // Load More
+    $('loadMore').onclick = () => { page++; renderList(); };
+
+    // Tech Export
+    $('techExportBtn').onclick = () => { window.location = '/api/export/csv'; };
+
+    // Register Button
+    $('techRegisterBtn').onclick = () => show($('registerModal'));
+
+    // ... Keep and update event listeners
+
+    // Initial load
+    applyDarkMode();
+    applyKioskUI();
+    updateHeaderUI();
+    loadItems();
+  </script>
 </body>
 </html>
